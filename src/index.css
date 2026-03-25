@@ -107,6 +107,32 @@
 }
 
 /* Transitions */
-.view-transition {
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+/* 3D Flip Utilities */
+.perspective-1000 {
+  perspective: 1000px;
 }
+.perspective-2000 {
+  perspective: 2000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Cinematic Shutter Effect */
+.shutter-top {
+  clip-path: inset(0 0 50% 0);
+}
+.shutter-bottom {
+  clip-path: inset(50% 0 0 0);
+}
+
+/* Comic Text Stroke */
+.text-stroke {
+  -webkit-text-stroke: 1.5px #000;
+  text-stroke: 1.5px #000;
+}
+
