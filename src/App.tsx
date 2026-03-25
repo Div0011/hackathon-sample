@@ -10,6 +10,8 @@ import { ProfileCreationView } from './components/ProfileCreationView';
 import { UserRecommendationView } from './components/UserRecommendationView';
 import { AnalyticsDashboardView } from './components/AnalyticsDashboardView';
 import { PlatformPolicyView } from './components/PlatformPolicyView';
+import { TheLounge } from './components/TheLounge';
+
 
 import { NeuralBackground } from './components/NeuralBackground';
 import { Snowfall } from './components/Snowfall';
@@ -18,7 +20,8 @@ import { CustomCursor } from './components/CustomCursor';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type ViewState = 'entry' | 'dashboard' | 'profile-creation' | 'recommendations' | 'analytics' | 'policy';
+type ViewState = 'entry' | 'dashboard' | 'profile-creation' | 'recommendations' | 'analytics' | 'policy' | 'lounge';
+
 
 function App() {
   const [view, setView] = useState<ViewState>('entry');
@@ -94,11 +97,14 @@ function App() {
             className="w-full"
           >
             {view === 'entry' && <EntryView onSelect={() => setView('dashboard')} />}
-            {view === 'dashboard' && <DashboardView />}
-            {view === 'profile-creation' && <ProfileCreationView />}
-            {view === 'recommendations' && <UserRecommendationView />}
+            {view === 'dashboard' && <DashboardView onNavigate={setView} />}
+            {view === 'profile-creation' && <ProfileCreationView onNavigate={setView} />}
+            {view === 'recommendations' && <UserRecommendationView onNavigate={setView} />}
+
             {view === 'analytics' && <AnalyticsDashboardView />}
             {view === 'policy' && <PlatformPolicyView />}
+            {view === 'lounge' && <TheLounge />}
+
           </motion.div>
         </AnimatePresence>
       </main>

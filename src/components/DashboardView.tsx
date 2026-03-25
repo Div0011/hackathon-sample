@@ -45,7 +45,8 @@ const OngoingEvents = () => {
   );
 };
 
-export const DashboardView = () => {
+export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void }) => {
+
   return (
     <section className="relative min-h-screen w-full bg-background overflow-hidden p-12">
       <OrbBackground />
@@ -88,8 +89,14 @@ export const DashboardView = () => {
                 Join thousands of neural hosts in the most advanced networking clusters.
               </p>
               <div className="mt-8 overflow-hidden h-0 group-hover:h-12 transition-all duration-500">
-                <button className="btn-premium px-8 py-3 rounded-xl text-sm">EXPLORE GATEWAYS</button>
+                <button 
+                  onClick={() => onNavigate('profile-creation')}
+                  className="btn-premium px-8 py-3 rounded-xl text-sm"
+                >
+                  EXPLORE GATEWAYS
+                </button>
               </div>
+
             </div>
           </motion.div>
 
