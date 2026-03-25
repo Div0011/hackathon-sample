@@ -69,7 +69,8 @@ export const EntryView: React.FC<EntryViewProps> = ({ onSelect }) => {
          </div>
       </motion.div>
 
-      <div className="relative z-10 flex flex-col items-center">
+      <div className="relative z-[200] flex flex-col items-center">
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -99,7 +100,8 @@ export const EntryView: React.FC<EntryViewProps> = ({ onSelect }) => {
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-10 w-full max-w-[450px]">
+        <div className="flex flex-col gap-10 w-full max-w-[450px] relative z-[300]">
+
           <motion.button 
             whileHover={{ x: -10, y: -10 }}
             whileTap={{ scale: 0.98 }}
