@@ -13,7 +13,7 @@ const events = [
     attendees: "12.4K",
     price: "$299",
     category: "MUSIC",
-    color: "#ff7eb9",
+    color: "#e63946",
     tagline: "VIBE!"
   },
   {
@@ -75,16 +75,10 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
             transition={{ duration: 0.8, ease: "circOut" }}
             className="absolute inset-0"
           >
-            <motion.img 
-              animate={{ 
-                 x: [0, 20, 0],
-                 y: [0, -20, 0],
-                 scale: [1, 1.05, 1]
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            <img 
               src={currentEvent.image} 
               alt={currentEvent.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover vintage-image"
             />
             {/* Halftone / Cinematic Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
@@ -170,14 +164,16 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
               animate={{ opacity: 1, x: 0, rotate: 0 }}
               className="hidden lg:flex flex-col gap-8 w-64"
            >
-              <div className="bg-[#7afcff] border-4 border-black p-8 shadow-[12px_12px_0px_#000] -rotate-3">
+              <div className="bg-[#ffb703] border-4 border-black p-8 shadow-[12px_12px_0px_#000] -rotate-3 text-black">
                  <p className="font-black text-4xl mb-2">99%</p>
                  <p className="text-[10px] font-black opacity-40">SYNC GAIN!</p>
               </div>
-              <div className="bg-[#ff7eb9] border-4 border-black p-8 shadow-[12px_12px_0px_#000] rotate-3 text-white">
+              <div className="bg-[#e63946] border-4 border-black p-8 shadow-[12px_12px_0px_#000] rotate-3 text-white">
                  <p className="font-black text-2xl leading-none italic mb-4">LIVE FEED ACTIVE!</p>
                  <div className="w-full h-1 bg-white" />
               </div>
+
+
            </motion.div>
         </div>
 
@@ -196,7 +192,8 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-32 items-center">
             <div className="flex-1">
                <div className="inline-block px-8 py-2 bg-black text-white text-[10px] font-black tracking-[0.6em] mb-12">IDENTITY HUB //</div>
-               <h3 className="text-7xl md:text-[11rem] font-black italic tracking-tighter text-stroke leading-none mb-12">INITIATE <span className="bg-[#feff9c] text-black px-8 not-italic">SYNC!</span></h3>
+               <h3 className="text-7xl md:text-[11rem] font-black italic tracking-tighter text-stroke leading-none mb-12">INITIATE <span className="bg-[#ffb703] text-black px-8 not-italic">SYNC!</span></h3>
+
                <p className="text-2xl font-black max-w-xl mb-16 leading-tight lowercase border-r-8 border-black pr-12 text-right italic">"join the next-gen neural collective in high-contrast cinematic glory."</p>
                <button 
                  onClick={() => onNavigate('profile-creation')}
