@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, MapPin, Zap, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MapPin, Zap, Star, Ticket } from 'lucide-react';
 
 const events = [
   {
@@ -33,108 +33,120 @@ const events = [
 ];
 
 export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void }) => {
-  const [active, setActive] = useState(0);
+  const [index, setIndex] = useState(0);
+  const current = events[index];
+
+  const next = () => setIndex((i) => (i + 1) % events.length);
+  const prev = () => setIndex((i) => (i - 1 + events.length) % events.length);
 
   return (
-    <section className="relative min-h-screen w-full bg-[#f8fbff] flex flex-col font-display uppercase overflow-hidden pb-32 pt-16">
+    <section className="relative min-h-screen w-full bg-[#fffdf2] flex flex-col font-display uppercase overflow-hidden">
       
-      {/* SHARP COMIC HEADER */}
-      <div className="z-10 px-8 md:px-16 mb-12 flex justify-between items-end">
-         <div className="max-w-2xl">
-            <h1 className="text-6xl md:text-9xl font-black italic tracking-tighter text-stroke leading-none">
-               EPIC <span className="bg-[#ffb703] px-6 not-italic">LOGS //</span>
-            </h1>
-            <p className="mt-4 text-black font-bold text-xl md:text-2xl border-l-8 border-black pl-6 opacity-60 italic lowercase">
-               select a neural cluster to synchronize with the collective.
-            </p>
-         </div>
-         <div className="hidden md:flex gap-4">
-            <button onClick={() => setActive((a) => (a - 1 + events.length) % events.length)} className="w-20 h-20 border-4 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
-               <ArrowLeft size={32} strokeWidth={4} />
-            </button>
-            <button onClick={() => setActive((a) => (a + 1) % events.length)} className="w-20 h-20 border-4 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
-               <ArrowRight size={32} strokeWidth={4} />
-            </button>
-         </div>
+      {/* SHUTTER BARS (Cinematic Letterboxing) */}
+      <div className="absolute top-0 inset-x-0 h-24 bg-black z-30 pointer-events-none flex items-end justify-center pb-6">
+         <span className="text-white text-[10px] font-black tracking-[1em] opacity-40 italic">APERTURE LOG // EVENT GRID V3</span>
+      </div>
+      <div className="absolute bottom-0 inset-x-0 h-24 bg-black z-30 pointer-events-none flex items-start justify-center pt-6">
+         <span className="text-white text-[10px] font-black tracking-[1em] opacity-40 italic">PASTEL SYNC // RUNTIME 3.0.4</span>
       </div>
 
-      {/* COMIC STRIP SLIDER */}
-      <div className="relative flex-1 px-8 md:px-16 flex gap-8 items-center overflow-x-hidden">
-         <AnimatePresence mode="popLayout" initial={false}>
-            {events.map((event, i) => {
-               const isActive = i === active;
-               const offset = i - active;
-               
-               return (
+      {/* BACKGROUND DEPTH (Halftone dots) */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:16px_16px] z-0" />
+
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 md:px-12 pt-32 pb-44">
+         
+         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* LEFT: EVENT PREVIEW PANEL (Focused Comic Frame) */}
+            <div className="lg:col-span-7 relative group">
+               <div className="absolute -top-12 -left-12 bg-[#ffb703] border-4 border-black px-8 py-3 font-black text-2xl rotate-[-10deg] shadow-[10px_10px_0px_#000] z-20">
+                  {current.tag}
+               </div>
+
+               <AnimatePresence mode="wait">
                   <motion.div
-                    key={event.id}
-                    layout
-                    initial={{ opacity: 0, x: 200, scale: 0.8 }}
-                    animate={{ 
-                       opacity: 1, 
-                       x: offset * 450, // Stagger panels
-                       scale: isActive ? 1 : 0.9,
-                       zIndex: isActive ? 20 : 10,
-                       rotate: offset * 2
-                    }}
-                    exit={{ opacity: 0, scale: 0.5, x: -500 }}
-                    transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-                    className={`absolute inset-y-0 w-full max-w-[400px] md:max-w-[500px] cursor-pointer group`}
-                    onClick={() => setActive(i)}
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9, x: -50 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 1.1, x: 50 }}
+                    transition={{ duration: 0.6, ease: "circOut" }}
+                    className="relative aspect-[16/10] bg-white border-8 border-black shadow-[30px_30px_0px_#000] overflow-hidden"
                   >
-                     <div className={`relative h-full w-full bg-white border-[6px] border-black shadow-[15px_15px_0px_#000] overflow-hidden transition-all group-hover:shadow-[30px_30px_0px_#000]`}>
-                        {/* Event Image with Vintage Filter */}
-                        <img src={event.image} alt={event.name} className="absolute inset-0 w-full h-full object-cover vintage-image" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
-                        
-                        {/* Action Sticker */}
-                        <div className={`absolute top-8 left-8 border-4 border-black px-6 py-2 bg-white font-black text-xl italic shadow-[6px_6px_0px_#000] z-20`}>
-                           {event.tag}
-                        </div>
-
-                        {/* Content Overlay */}
-                        <div className="absolute inset-x-0 bottom-0 p-10 text-white">
-                           <div className="flex items-center gap-3 mb-4">
-                              <MapPin size={24} className="text-secondary" />
-                              <span className="font-black tracking-widest text-sm">{event.location}</span>
-                           </div>
-                           <h2 className="text-6xl md:text-8xl font-black italic tracking-tighter leading-[0.8] mb-6 drop-shadow-[5px_5px_0px_rgba(0,0,0,1)]">
-                              {event.name}
-                           </h2>
-                           <p className="font-bold text-lg leading-tight mb-8 lowercase opacity-80 line-clamp-2 italic">
-                              {event.desc}
-                           </p>
-
-                           <button 
-                             onClick={(e) => { e.stopPropagation(); onNavigate('profile-creation'); }}
-                             className="w-full bg-white text-black border-4 border-black py-5 text-2xl font-black italic shadow-[8px_8px_0px_#000] active:translate-y-1 transition-all group-hover:bg-[#ffb703]"
-                           >
-                             BOOK TICKET!
-                           </button>
-                        </div>
-
-                        {/* Hover Halftone Pattern */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 pointer-events-none transition-opacity bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:8px_8px]" />
+                     <img src={current.image} alt={current.name} className="w-full h-full object-cover vintage-image" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                     
+                     <div className="absolute bottom-8 left-8 flex items-center gap-4 text-white">
+                        <MapPin size={24} className="text-secondary" />
+                        <span className="font-black text-2xl tracking-widest">{current.location}</span>
                      </div>
                   </motion.div>
-               );
-            })}
-         </AnimatePresence>
-      </div>
+               </AnimatePresence>
 
-      {/* FOOTER INTERSECTION */}
-      <div className="px-8 md:px-16 mt-20 flex flex-col md:flex-row justify-between items-center gap-12">
-         <div className="flex gap-4">
-            {events.map((_, i) => (
-               <div key={i} className={`h-4 border-2 border-black transition-all ${i === active ? 'w-16 bg-primary' : 'w-4 bg-white'}`} />
+               {/* Panel Decorative Stickers */}
+               <div className="absolute -bottom-8 -right-8 bg-black border-4 border-black p-4 text-white rotate-[5deg] shadow-[8px_8px_0px_#000]">
+                  <Zap size={40} />
+               </div>
+            </div>
+
+            {/* RIGHT: CONTENT PANEL (Clean Action Typography) */}
+            <div className="lg:col-span-5 flex flex-col items-start">
+               <AnimatePresence mode="wait">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full"
+                  >
+                     <p className="text-primary font-black text-2xl tracking-[0.4em] mb-4 italic leading-none border-l-8 border-black pl-6 lowercase">
+                        atmospheric syncing cluster //
+                     </p>
+                     <h2 className="text-7xl md:text-9xl font-black italic tracking-tighter leading-none mb-8 text-stroke">
+                        {current.name}
+                     </h2>
+                     <p className="text-xl md:text-2xl font-bold leading-tight mb-12 italic lowercase max-w-lg">
+                        {current.desc}
+                     </p>
+
+                     <div className="flex flex-col gap-6 w-full">
+                        <button 
+                          onClick={() => onNavigate('profile-creation')}
+                          className="btn-premium py-8 text-3xl italic shadow-[15px_15px_0px_#000] hover:shadow-[25px_25px_0px_#000] flex items-center justify-center gap-4"
+                        >
+                           STRIKE TICKET! <Ticket size={32} strokeWidth={3} />
+                        </button>
+                        
+                        <div className="flex gap-4 w-full">
+                           <button onClick={prev} className="flex-1 bg-white border-4 border-black h-20 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
+                              <ArrowLeft size={32} strokeWidth={4} />
+                           </button>
+                           <button onClick={next} className="flex-1 bg-white border-4 border-black h-20 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
+                              <ArrowRight size={32} strokeWidth={4} />
+                           </button>
+                        </div>
+                     </div>
+                  </motion.div>
+               </AnimatePresence>
+            </div>
+         </div>
+
+         {/* BOTTOM: MINI PREVIEW GRID (Clean Comic Strips) */}
+         <div className="absolute bottom-32 left-0 right-0 flex justify-center gap-8 pointer-events-none">
+            {events.map((ev, i) => (
+               <div key={ev.id} className={`h-1.5 border-2 border-black transition-all duration-500 ${i === index ? 'w-24 bg-primary' : 'w-12 bg-black/10'}`} />
             ))}
          </div>
-         <div className="flex items-center gap-6">
-            <div className="w-12 h-12 bg-black border-4 border-black flex items-center justify-center">
-               <Zap className="text-white" size={24} />
-            </div>
-            <span className="font-black text-lg tracking-widest italic opacity-40">PROTOCOL: APERTURE_SYNC V3</span>
-         </div>
+      </div>
+
+      {/* SYNC PROFILE PROMPT (Splatter Panel) */}
+      <div className="py-44 px-8 md:px-16 bg-white border-t-8 border-black flex flex-col items-center">
+         <h3 className="text-6xl md:text-9xl font-black italic tracking-tighter text-stroke text-center mb-12 lowercase">
+            ready to <span className="bg-[#ffb703] not-italic px-4 text-black">sync?</span>
+         </h3>
+         <button onClick={() => onNavigate('profile-creation')} className="btn-premium px-16 py-6 text-2xl italic">
+            INITIATE BIOLOGICAL HANDSHAKE
+         </button>
       </div>
     </section>
   );
