@@ -14,7 +14,6 @@ import { TheLounge } from './components/TheLounge';
 
 
 import { NeuralBackground } from './components/NeuralBackground';
-import { Snowfall } from './components/Snowfall';
 import { FullscreenMenu } from './components/FullscreenMenu';
 import { CustomCursor } from './components/CustomCursor';
 
@@ -48,46 +47,42 @@ function App() {
   const pageVariants = {
     initial: { 
       opacity: 0, 
-      x: 100, 
-      filter: 'blur(20px)',
-      scale: 1.1
+      x: 0, 
+      scale: 1.2,
+      filter: 'brightness(1.5) blur(10px)'
     },
     enter: { 
       opacity: 1, 
       x: 0, 
-      filter: 'blur(0px)',
       scale: 1,
+      filter: 'brightness(1) blur(0px)',
       transition: { 
-        duration: 0.8, 
-        ease: [0.22, 1, 0.36, 1] as any,
-        filter: { duration: 0.4 }
+        duration: 0.6, 
+        ease: "circOut"
       }
     },
     exit: { 
       opacity: 0, 
-      x: -100, 
-      filter: 'blur(20px)',
-      scale: 0.9,
+      x: 0, 
+      scale: 0.8,
+      filter: 'brightness(0.5) blur(10px)',
       transition: { 
-        duration: 0.6, 
-        ease: [0.22, 1, 0.36, 1] as any,
-        filter: { duration: 0.3 }
+        duration: 0.4, 
+        ease: "circIn"
       }
     }
-
   };
 
 
   return (
-    <div className="relative w-full bg-background selection:bg-primary/30 min-h-screen text-[#2d3436] overflow-x-hidden">
-
+    <div className="relative w-full bg-background selection:bg-primary/30 min-h-screen text-black overflow-x-hidden font-display uppercase font-black">
       <CustomCursor />
       <NeuralBackground />
 
 
       <FullscreenMenu currentView={view} onNavigate={setView} />
 
-      <main className="relative z-10">
+      <main className="relative z-10 w-full min-h-screen">
         <AnimatePresence mode="wait">
           <motion.div
             key={view}
@@ -95,7 +90,7 @@ function App() {
             animate="enter"
             exit="exit"
             variants={pageVariants}
-            className="w-full"
+            className="w-full flex-1"
           >
             {view === 'entry' && <EntryView onSelect={() => setView('dashboard')} />}
             {view === 'dashboard' && <DashboardView onNavigate={setView} />}
@@ -110,44 +105,47 @@ function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="relative z-10 w-full py-20 px-12 border-t border-black/5 bg-white/50 backdrop-blur-2xl">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-left">
-          <div className="col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-black text-white">S</div>
-               <span className="text-2xl font-bold tracking-tighter">SCANECT</span>
+      {/* Comic Styled Footer */}
+      <footer className="relative z-10 w-full py-32 px-12 border-t-8 border-black bg-white flex flex-col items-center justify-center">
+         <div className="max-w-7xl w-full grid md:grid-cols-2 gap-20">
+            <div>
+               <div className="flex items-center gap-6 mb-12">
+                  <div className="w-16 h-16 bg-primary border-4 border-black shadow-[8px_8px_0px_#000] flex items-center justify-center font-black text-4xl text-white">S</div>
+                  <span className="text-5xl tracking-tighter italic">SCANECT // SYNC!</span>
+               </div>
+               <p className="text-black text-2xl font-black italic max-w-lg mb-12 leading-none border-l-8 border-black pl-8 lowercase">
+                 THE FUTURE OF ATMOSPHERIC NETWORKING IN HIGH-CONTRAST NEURAL PASTEL.
+               </p>
+               <div className="flex gap-4">
+                  <div className="px-6 py-2 bg-black text-white text-[10px] tracking-widest">PASTEL CORE v3.0</div>
+                  <div className="px-6 py-2 border-2 border-black text-[10px] tracking-widest">TIER 1 PROTOCOL</div>
+               </div>
             </div>
-            <p className="text-muted-foreground max-w-sm text-sm leading-relaxed font-medium">
-              The future of atmospheric networking. Where biological identity meets neural precision through advanced aperture orchestration.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-black text-xs uppercase tracking-[0.2em] mb-6 text-primary">Protocol</h4>
-            <ul className="space-y-4 text-sm text-muted">
-               <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => setView('policy')}>Policy</li>
-               <li className="hover:text-primary cursor-pointer transition-colors">Neural Security</li>
-               <li className="hover:text-primary cursor-pointer transition-colors">Aperture Dev</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-black text-xs uppercase tracking-[0.2em] mb-6 text-primary">Connect</h4>
-            <ul className="space-y-4 text-sm text-muted">
-               <li className="hover:text-primary cursor-pointer transition-colors">X / Twitter</li>
-               <li className="hover:text-primary cursor-pointer transition-colors">Discord</li>
-               <li className="hover:text-primary cursor-pointer transition-colors">Neural Link</li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-20 pt-8 border-t border-black/5 text-center">
-          <p className="text-muted text-[10px] uppercase tracking-[0.5em] opacity-40">&copy; 2026 SCANECT PASTEL. POWERED BY NEURAL APERTURE V3.0.1</p>
-        </div>
+            <div className="grid grid-cols-2 gap-12">
+               <div>
+                  <h4 className="text-primary text-xl mb-8 underline decoration-4">IDENTITY</h4>
+                  <ul className="space-y-4 text-lg">
+                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => setView('policy')}>POLICY</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors">SYNC! HUB</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors">DREAM LOG</li>
+                  </ul>
+               </div>
+               <div>
+                  <h4 className="text-secondary text-xl mb-8 underline decoration-4">APERTURE</h4>
+                  <ul className="space-y-4 text-lg">
+                     <li className="hover:text-primary cursor-pointer transition-colors">X (TWITTER)</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors">DISCORD</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors">NEURAL LINK</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div className="mt-32 pt-12 border-t-4 border-black w-full text-center">
+            <p className="text-[10px] tracking-[0.8em] opacity-40"> &copy; 2026 SCANECT // POWERED BY NEURAL APERTURE V3.0.4. ALL RIGHTS RESERVED. </p>
+         </div>
       </footer>
-
     </div>
   );
 }
 
 export default App;
-
-
-
