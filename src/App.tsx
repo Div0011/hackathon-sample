@@ -79,7 +79,8 @@ function App() {
 
 
   return (
-    <div className="relative w-full bg-background selection:bg-primary/30 min-h-screen text-white overflow-x-hidden">
+    <div className="relative w-full bg-background selection:bg-primary/30 min-h-screen text-[#2d3436] overflow-x-hidden">
+
       <CustomCursor />
       <NeuralBackground />
 
@@ -109,38 +110,39 @@ function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="relative z-10 w-full py-20 px-12 border-t border-white/5 bg-[#050505]/80 backdrop-blur-2xl">
+      <footer className="relative z-10 w-full py-20 px-12 border-t border-black/5 bg-white/50 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-left">
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-6">
-               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-black text-background">S</div>
+               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-black text-white">S</div>
                <span className="text-2xl font-bold tracking-tighter">SCANECT</span>
             </div>
-            <p className="text-muted max-w-sm text-sm leading-relaxed">
+            <p className="text-muted-foreground max-w-sm text-sm leading-relaxed font-medium">
               The future of atmospheric networking. Where biological identity meets neural precision through advanced aperture orchestration.
             </p>
           </div>
           <div>
             <h4 className="font-black text-xs uppercase tracking-[0.2em] mb-6 text-primary">Protocol</h4>
             <ul className="space-y-4 text-sm text-muted">
-               <li className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('policy')}>Policy</li>
-               <li className="hover:text-white cursor-pointer transition-colors">Neural Security</li>
-               <li className="hover:text-white cursor-pointer transition-colors">Aperture Dev</li>
+               <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => setView('policy')}>Policy</li>
+               <li className="hover:text-primary cursor-pointer transition-colors">Neural Security</li>
+               <li className="hover:text-primary cursor-pointer transition-colors">Aperture Dev</li>
             </ul>
           </div>
           <div>
             <h4 className="font-black text-xs uppercase tracking-[0.2em] mb-6 text-primary">Connect</h4>
             <ul className="space-y-4 text-sm text-muted">
-               <li className="hover:text-white cursor-pointer transition-colors">X / Twitter</li>
-               <li className="hover:text-white cursor-pointer transition-colors">Discord</li>
-               <li className="hover:text-white cursor-pointer transition-colors">Neural Link</li>
+               <li className="hover:text-primary cursor-pointer transition-colors">X / Twitter</li>
+               <li className="hover:text-primary cursor-pointer transition-colors">Discord</li>
+               <li className="hover:text-primary cursor-pointer transition-colors">Neural Link</li>
             </ul>
           </div>
         </div>
-        <div className="mt-20 pt-8 border-t border-white/5 text-center">
-          <p className="text-muted text-[10px] uppercase tracking-[0.5em] opacity-40">&copy; 2026 SCANECT OBSIDIAN. POWERED BY NEURAL APERTURE V2.0.4</p>
+        <div className="mt-20 pt-8 border-t border-black/5 text-center">
+          <p className="text-muted text-[10px] uppercase tracking-[0.5em] opacity-40">&copy; 2026 SCANECT PASTEL. POWERED BY NEURAL APERTURE V3.0.1</p>
         </div>
       </footer>
+
     </div>
   );
 }

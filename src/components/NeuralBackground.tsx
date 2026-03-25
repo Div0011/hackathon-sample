@@ -9,14 +9,23 @@ const ElasticMesh = () => {
   const count = 40; // Grid resolution
   const particlesCount = count * count;
 
-  const [positions, initialPositions] = useMemo(() => {
+  const [positions, initialPositions, colors] = useMemo(() => {
     const pos = new Float32Array(particlesCount * 3);
     const initial = new Float32Array(particlesCount * 3);
+    const cls = new Float32Array(particlesCount * 3);
+    
+    // Pastel colors: Pink, Cyan, Lavender
+    const palette = [
+        new THREE.Color('#ff7eb9'),
+        new THREE.Color('#7afcff'),
+        new THREE.Color('#e0c3fc')
+    ];
+
     for (let i = 0; i < count; i++) {
       for (let j = 0; j < count; j++) {
         const idx = (i * count + j) * 3;
-        const x = (i - count / 2) * 0.4;
-        const y = (j - count / 2) * 0.4;
+        const x = (i - count / 2) * 0.45;
+        const y = (j - count / 2) * 0.45;
         pos[idx] = x;
         pos[idx + 1] = y;
         pos[idx + 2] = 0;
@@ -24,9 +33,14 @@ const ElasticMesh = () => {
         initial[idx] = x;
         initial[idx + 1] = y;
         initial[idx + 2] = 0;
+
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        cls[idx] = color.r;
+        cls[idx + 1] = color.g;
+        cls[idx + 2] = color.b;
       }
     }
-    return [pos, initial];
+    return [pos, initial, cls];
   }, []);
 
   useFrame((state) => {
@@ -36,7 +50,6 @@ const ElasticMesh = () => {
     const posAttr = meshRef.current.geometry.attributes.position;
     const currentPositions = posAttr.array as Float32Array;
 
-    // Target mouse position in world space
     const targetX = (state.mouse.x * state.viewport.width) / 2;
     const targetY = (state.mouse.y * state.viewport.height) / 2;
     
@@ -47,24 +60,20 @@ const ElasticMesh = () => {
         const x = initialPositions[i * 3];
         const y = initialPositions[i * 3 + 1];
         
-        // Distance from mouse
         const dx = x - mouse.current.x;
         const dy = y - mouse.current.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        // Wave effect
-        const wave = Math.sin(dist * 2 - time * 2) * 0.15;
-        
-        // Mouse interaction (push away)
-        const force = Math.max(0, 1.5 - dist) * 0.5;
+        const wave = Math.sin(dist * 1.5 - time * 1.5) * 0.2;
+        const force = Math.max(0, 2.0 - dist) * 0.8;
         
         currentPositions[i * 3] = x + (dx / (dist + 0.1)) * force;
         currentPositions[i * 3 + 1] = y + (dy / (dist + 0.1)) * force;
-        currentPositions[i * 3 + 2] = wave - force * 2;
+        currentPositions[i * 3 + 2] = wave - force * 2.5;
     }
 
     posAttr.needsUpdate = true;
-    meshRef.current.rotation.z = Math.sin(time * 0.1) * 0.1;
+    meshRef.current.rotation.z = Math.sin(time * 0.05) * 0.05;
   });
 
   return (
@@ -76,15 +85,20 @@ const ElasticMesh = () => {
           array={positions}
           itemSize={3}
         />
-
+        <bufferAttribute
+          attach="attributes-color"
+          count={particlesCount}
+          array={colors}
+          itemSize={3}
+        />
       </bufferGeometry>
       <pointsMaterial
-        size={0.03}
-        color="#00e3fd"
+        size={0.06}
+        vertexColors
         transparent
-        opacity={0.3}
+        opacity={0.5}
         sizeAttenuation
-        blending={THREE.AdditiveBlending}
+        blending={THREE.NormalBlending}
       />
     </points>
   );
@@ -92,36 +106,30 @@ const ElasticMesh = () => {
 
 export const NeuralBackground = () => {
   return (
-    <div className="fixed inset-0 z-0 bg-[#050505]">
-      {/* Deep gradient for depth */}
-      <div className="absolute inset-0 bg-radial-gradient opacity-20" />
+    <div className="fixed inset-0 z-0 bg-background transition-colors duration-1000">
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#ff7eb922] via-transparent to-[#7afcff22] opacity-40" />
       
       <Canvas 
-        camera={{ position: [0, 0, 8], fov: 60 }}
+        camera={{ position: [0, 0, 10], fov: 60 }}
         dpr={[1, 2]}
       >
-        <color attach="background" args={['#050505']} />
-        <fog attach="fog" args={['#050505', 5, 15]} />
-        <ambientLight intensity={0.5} />
+        <color attach="background" args={['#fff9fc']} />
+        <fog attach="fog" args={['#fff9fc', 5, 20]} />
+        <ambientLight intensity={1.5} />
+        <pointLight position={[10, 10, 10]} intensity={1.5} />
         
         <ElasticMesh />
         
-        {/* Floating secondary accent orbs */}
-        <mesh position={[5, 2, -2]}>
-          <sphereGeometry args={[2, 32, 32]} />
-          <meshBasicMaterial color="#bc00ff" transparent opacity={0.02} />
+        {/* Soft pastel blobs */}
+        <mesh position={[7, 4, -4]}>
+          <sphereGeometry args={[4, 32, 32]} />
+          <meshBasicMaterial color="#ff7eb9" transparent opacity={0.05} />
         </mesh>
-        <mesh position={[-5, -3, -2]}>
-          <sphereGeometry args={[3, 32, 32]} />
-          <meshBasicMaterial color="#00e3fd" transparent opacity={0.02} />
+        <mesh position={[-7, -5, -4]}>
+          <sphereGeometry args={[6, 32, 32]} />
+          <meshBasicMaterial color="#7afcff" transparent opacity={0.05} />
         </mesh>
       </Canvas>
-
-      <style>{`
-        .bg-radial-gradient {
-          background: radial-gradient(circle at center, #00e3fd11 0%, transparent 70%);
-        }
-      `}</style>
     </div>
   );
 };
