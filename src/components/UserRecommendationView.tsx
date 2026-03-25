@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { X, Zap, Shield, User, Fingerprint } from 'lucide-react';
+import { X, Zap, User, Fingerprint, Star } from 'lucide-react';
+
+interface UserRecommendationViewProps {
+  onNavigate?: (view: any) => void;
+}
 
 const UserCard = ({ name, role, id, isSelected, onSelect }: { 
   name: string, 
@@ -19,19 +23,23 @@ const UserCard = ({ name, role, id, isSelected, onSelect }: {
         <motion.div 
           layoutId={`card-${id}`}
           onClick={onSelect}
-          className="relative w-full h-[400px] cursor-pointer perspective-1000 z-10"
-          whileHover={{ y: -10 }}
+          className="relative w-full h-[450px] cursor-pointer group"
+          whileHover={{ y: -8 }}
         >
-          <div className="w-full h-full glass bg-white p-8 flex flex-col justify-end relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Fingerprint className="w-24 h-24 text-black" />
+          <div className="w-full h-full bg-white border-4 border-black p-8 flex flex-col justify-end relative overflow-hidden transition-all shadow-[8px_8px_0px_#000] hover:shadow-[20px_20px_0px_#000]">
+             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Fingerprint className="w-32 h-32 text-black" />
              </div>
+             
+             {/* Halftone Pattern */}
+             <div className="absolute inset-0 opacity-0 group-hover:opacity-5 pointer-events-none transition-opacity bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:6px_6px]" />
+
              <div className="relative z-10">
-               <div className="w-14 h-14 bg-primary border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_#000]">
-                  <User className="w-8 h-8 text-white" />
+               <div className="w-16 h-16 bg-[#ffb703] border-4 border-black flex items-center justify-center mb-8 shadow-[6px_6px_0px_#000]">
+                  <User className="w-10 h-10 text-black" />
                </div>
-               <h3 className="text-2xl font-black mb-2">{name}</h3>
-               <p className="text-primary font-black text-xs tracking-widest italic">{role}</p>
+               <h3 className="text-4xl font-black italic tracking-tighter mb-4 leading-none uppercase">{name}</h3>
+               <p className="inline-block px-4 py-1 bg-black text-white text-[10px] font-black tracking-widest">{role}</p>
              </div>
           </div>
         </motion.div>
@@ -40,29 +48,15 @@ const UserCard = ({ name, role, id, isSelected, onSelect }: {
       {/* Expanded Focused Card (Cinematic Flip) */}
       <AnimatePresence>
         {isSelected && (
-          <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-12 overflow-hidden">
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 md:p-12 overflow-hidden">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onSelect}
-              className="absolute inset-0 bg-black/60 backdrop-blur-xl"
+              className="absolute inset-0 bg-[#fffdf2]/98 backdrop-blur-2xl"
             />
             
-            {/* Shutter Animation Overlay */}
-            <motion.div 
-              initial={{ scaleY: 0 }}
-              animate={{ scaleY: 1 }}
-              exit={{ scaleY: 0 }}
-              className="absolute inset-x-0 top-0 h-20 bg-black z-10 origin-top"
-            />
-            <motion.div 
-              initial={{ scaleY: 0 }}
-              animate={{ scaleY: 1 }}
-              exit={{ scaleY: 0 }}
-              className="absolute inset-x-0 bottom-0 h-20 bg-black z-10 origin-bottom"
-            />
-
             <motion.div
               layoutId={`card-${id}`}
               className="relative w-full max-w-2xl aspect-[3/4] md:aspect-[4/3] cursor-pointer perspective-2000 z-20"
@@ -75,54 +69,47 @@ const UserCard = ({ name, role, id, isSelected, onSelect }: {
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
               >
                 {/* Front Face */}
-                <div className="absolute inset-0 backface-hidden glass bg-white p-12 md:p-20 flex flex-col justify-between border-4 border-black shadow-[20px_20px_0px_#000]">
+                <div className="absolute inset-0 backface-hidden bg-white p-12 md:p-20 flex flex-col justify-between border-8 border-black shadow-[30px_30px_0px_#000]">
                    <div className="flex justify-between items-start">
-                     <div className="w-24 h-24 bg-primary border-4 border-black flex items-center justify-center shadow-[8px_8px_0px_#000]">
-                        <Zap className="w-12 h-12 text-white" />
-                     </div>
-                     <button 
-                       onClick={(e) => { e.stopPropagation(); onSelect(); }}
-                       className="w-16 h-16 border-4 border-black flex items-center justify-center hover:bg-primary transition-colors"
-                       title="Close"
-                     >
-                       <X className="w-8 h-8" />
-                     </button>
+                      <div className="w-24 h-24 bg-primary border-4 border-black flex items-center justify-center shadow-[10px_10px_0px_#000]">
+                         <Zap className="w-12 h-12 text-white" />
+                      </div>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); onSelect(); }}
+                        className="w-16 h-16 border-4 border-black flex items-center justify-center bg-black text-white hover:bg-primary transition-colors"
+                        title="Close"
+                      >
+                        <X size={32} />
+                      </button>
                    </div>
 
                    <div>
-                     <span className="text-sm font-black text-primary tracking-[0.4em] mb-6 block">// NEURAL IDENTITY</span>
-                     <h3 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter italic">{name}</h3>
-                     <p className="text-2xl font-black opacity-60 mb-10 lowercase border-l-8 border-black pl-6">{role}</p>
-                     
-                     <div className="flex gap-6">
-                        <div className="px-8 py-3 bg-black text-white text-xs font-black tracking-widest italic">TIER 1 HOST</div>
-                        <div className="px-8 py-3 border-4 border-black text-xs font-black tracking-widest">VERIFIED</div>
-                     </div>
+                      <span className="text-sm font-black text-primary tracking-[0.4em] mb-6 block">// NEURAL CLUSTER IDENTITY</span>
+                      <h3 className="text-7xl md:text-9xl font-black mb-6 tracking-tighter italic text-stroke leading-none uppercase">{name}</h3>
+                      <p className="text-3xl font-black opacity-60 mb-12 lowercase border-l-8 border-black pl-8 italic">{role}</p>
+                      
+                      <div className="flex gap-6">
+                         <div className="px-10 py-3 bg-[#ffb703] border-4 border-black text-xs font-black tracking-widest italic text-black shadow-[6px_6px_0px_#000]">HOST TIER 1</div>
+                         <div className="px-10 py-3 border-4 border-black text-xs font-black tracking-widest bg-black text-white italic shadow-[6px_6px_0px_#000]">VERIFIED!</div>
+                      </div>
                    </div>
                 </div>
 
-                {/* Back Face (QR Code) */}
+                {/* Back Face (QR Code Content) */}
                 <div 
-                  className="absolute inset-0 backface-hidden bg-white p-12 md:p-20 flex flex-col items-center justify-center border-4 border-black shadow-[20px_20px_0px_#000]"
+                  className="absolute inset-0 backface-hidden bg-white p-12 md:p-20 flex flex-col items-center justify-center border-8 border-black shadow-[30px_30px_0px_#000]"
                   style={{ transform: 'rotateY(180deg)' }}
                 >
-                   <div className="relative mb-10">
-                      {/* Decorative Comic Stickers */}
-                      <div className="absolute -top-10 -left-10 bg-[#feff9c] border-2 border-black px-4 py-1 font-black text-[10px] rotate-[-15deg] shadow-[4px_4px_0px_#000]">SCAN NOW!</div>
-                      <div className="absolute -bottom-6 -right-6 bg-secondary border-2 border-black px-4 py-1 font-black text-[10px] rotate-[10deg] shadow-[4px_4px_0px_#000]">SYNC CORE</div>
+                   <div className="relative mb-12">
+                      <div className="absolute -top-12 -left-12 bg-[#ffb703] border-4 border-black px-10 py-4 font-black text-2xl rotate-[-15deg] shadow-[8px_8px_0px_#000] z-20">SCAN ME!</div>
+                      <div className="absolute -bottom-8 -right-8 bg-black border-4 border-black px-8 py-2 font-black text-xs rotate-[10deg] shadow-[8px_8px_0px_#000] z-20 text-white italic">SYNC CORE </div>
                       
-                      <div className="bg-black p-4 border-4 border-black shadow-[10px_10px_0px_#000]">
-                         <div className="bg-white p-6">
-                            <QRCodeSVG value={`https://scanect.io/user/${id}`} size={220} fgColor="#000" />
-                         </div>
+                      <div className="bg-white p-10 border-8 border-black shadow-[20px_20px_0px_#000]">
+                         <QRCodeSVG value={`https://scanect.io/user/${id}`} size={250} fgColor="#000" />
                       </div>
                    </div>
-                   <h4 className="text-4xl font-black mb-4 tracking-tighter">NEURAL HANDSHAKE</h4>
-                   <p className="text-black font-bold text-center max-w-md mb-10 italic">"SCAN TO SYNCHRONIZE YOUR BIOLOGICAL SIGNATURE WITH THIS IDENTITY CLUSTER."</p>
-                   <div className="flex items-center gap-3">
-                      <Shield className="w-5 h-5 text-primary" />
-                      <span className="text-xs font-black tracking-[0.4em]">ENCRYPTED APERTURE SYNC</span>
-                   </div>
+                   <h4 className="text-5xl font-black mb-6 tracking-tighter italic uppercase underline decoration-8 decoration-[#e63946] underline-offset-8">BIOLOGICAL HANDSHAKE</h4>
+                   <p className="text-2xl font-black text-center max-w-md italic lowercase opacity-60">"synchronize your biological signature with this identity cluster."</p>
                 </div>
               </motion.div>
             </motion.div>
@@ -133,7 +120,7 @@ const UserCard = ({ name, role, id, isSelected, onSelect }: {
   );
 };
 
-export const UserRecommendationView = () => {
+export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const users = [
@@ -144,17 +131,19 @@ export const UserRecommendationView = () => {
   ];
 
   return (
-    <section className="relative min-h-screen w-full pt-48 pb-32 px-12 overflow-hidden">
+    <section className="relative min-h-screen w-full pt-48 pb-32 px-12 bg-[#fffdf2] overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div 
-           className="mb-20"
+           className="mb-24"
            animate={{ opacity: selectedId ? 0 : 1 }}
         >
-           <h1 className="text-7xl md:text-9xl font-black tracking-tighter italic">NEURAL <span className="text-gradient">CONNECTIONS //</span></h1>
-           <div className="w-40 h-4 bg-black mt-4" />
-        </motion.h1>
+           <h1 className="text-8xl md:text-[11rem] font-black italic tracking-tighter text-stroke leading-none lowercase">neural <span className="bg-[#ffb703] px-6 text-black not-italic">discovery//</span></h1>
+           <p className="text-2xl font-black mt-12 lowercase italic border-l-8 border-black pl-8 max-w-2xl">
+              "synchronize with peer clusters across the high-performance cinematic ecosystem."
+           </p>
+        </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {users.map((user) => (
             <UserCard 
               key={user.id} 

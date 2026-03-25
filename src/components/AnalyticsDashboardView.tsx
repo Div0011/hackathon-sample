@@ -1,8 +1,13 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { 
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   ScatterChart, Scatter, ZAxis, Cell
 } from 'recharts';
+
+interface AnalyticsDashboardViewProps {
+  onNavigate?: (view: any) => void;
+}
 
 const data = [
   { name: 'Jan', value: 400, growth: 240, density: 100 },
@@ -20,50 +25,64 @@ const bubbleData = [
   { x: 150, y: 400, z: 500 },
 ];
 
-export const AnalyticsDashboardView = () => {
+export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () => {
   return (
-    <section className="relative min-h-screen w-full pt-40 p-12 overflow-hidden">
+    <section className="relative min-h-screen w-full pt-48 pb-32 px-12 overflow-hidden bg-[#fffdf2]">
       <div className="max-w-7xl mx-auto relative z-10">
-        <h1 className="text-6xl font-bold mb-12">Neural Analytics</h1>
+        <motion.h1 
+           initial={{ x: -50, opacity: 0 }}
+           animate={{ x: 0, opacity: 1 }}
+           className="text-7xl md:text-9xl font-black italic tracking-tighter text-stroke mb-20 lowercase"
+        >
+           neural <span className="bg-[#ffb703] not-italic px-6 text-black">analytics//</span>
+        </motion.h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Line Chart */}
-          <div className="glass p-8 rounded-3xl h-[400px] border border-white/5 snow-cap">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-6">User Velocity</h3>
+          <div className="bg-white border-4 border-black p-10 shadow-[15px_15px_0px_#000] h-[450px]">
+            <h3 className="text-xl font-black mb-8 italic border-b-4 border-black pb-4 uppercase">User Velocity //</h3>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
-                <XAxis dataKey="name" stroke="#666" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                <XAxis dataKey="name" stroke="#000" strokeWidth={2} />
+                <YAxis stroke="#000" strokeWidth={2} />
                 <Tooltip 
-                  contentStyle={{ background: '#0e0e0e', border: '1px solid #333', borderRadius: '12px' }}
+                  contentStyle={{ background: '#fff', border: '4px solid #000', borderRadius: '0px', fontWeight: 'bold' }}
                 />
-                <Line type="monotone" dataKey="growth" stroke="#00e3fd" strokeWidth={4} dot={{ fill: '#00e3fd' }} />
+                <Line type="stepAfter" dataKey="growth" stroke="#e63946" strokeWidth={6} dot={{ fill: '#000', r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
           {/* Bar Chart */}
-          <div className="glass p-8 rounded-3xl h-[400px] border border-white/5 snow-cap">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-6">Engagement Density</h3>
+          <div className="bg-white border-4 border-black p-10 shadow-[15px_15px_0px_#000] h-[450px]">
+            <h3 className="text-xl font-black mb-8 italic border-b-4 border-black pb-4 uppercase">Sync Density //</h3>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
-                <XAxis dataKey="name" stroke="#666" />
-                <Bar dataKey="value" fill="#bc00ff" radius={[10, 10, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                <XAxis dataKey="name" stroke="#000" strokeWidth={2} />
+                <YAxis stroke="#000" strokeWidth={2} />
+                <Bar dataKey="value" fill="#ffb703" stroke="#000" strokeWidth={2} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Bubble Chart */}
-          <div className="glass p-8 rounded-3xl h-[400px] border border-white/5 snow-cap col-span-1 lg:col-span-2">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-6">Cluster Distribution</h3>
+          <div className="bg-white border-4 border-black p-10 shadow-[20px_20px_0px_#000] h-[500px] col-span-1 lg:col-span-2">
+            <div className="flex justify-between items-center mb-10">
+               <h3 className="text-xl font-black italic border-b-4 border-black pb-4 uppercase">Cluster Distribution //</h3>
+               <div className="bg-black text-white px-4 py-1 text-xs font-black">MODE: VINTAGE_SCAN</div>
+            </div>
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart>
-                <XAxis type="number" dataKey="x" name="Density" stroke="#666" />
-                <YAxis type="number" dataKey="y" name="Velocity" stroke="#666" />
-                <ZAxis type="number" dataKey="z" range={[60, 400]} name="Volume" />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                <Scatter name="Clusters" data={bubbleData} fill="#00e3fd">
+                <CartesianGrid stroke="#eee" />
+                <XAxis type="number" dataKey="x" name="Density" stroke="#000" strokeWidth={2} />
+                <YAxis type="number" dataKey="y" name="Velocity" stroke="#000" strokeWidth={2} />
+                <ZAxis type="number" dataKey="z" range={[100, 800]} name="Volume" />
+                <Tooltip cursor={{ strokeDasharray: '4 4', stroke: '#000' }} />
+                <Scatter name="Clusters" data={bubbleData}>
                   {bubbleData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#00e3fd' : '#bc00ff'} />
+                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#e63946' : '#219ebc'} stroke="#000" strokeWidth={2} />
                   ))}
                 </Scatter>
               </ScatterChart>
