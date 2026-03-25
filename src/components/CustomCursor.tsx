@@ -1,78 +1,80 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export const CustomCursor = () => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const [isHovering, setIsHovering] = useState(false);
-
-  const springConfig = { damping: 20, stiffness: 200 };
-  const cursorX = useSpring(mouseX, springConfig);
-  const cursorY = useSpring(mouseY, springConfig);
+  const [isMobile, setIsMobile] = useState(false);
+  const [clicked, setClicked] = useState(false);
+  
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  const springConfig = { damping: 25, stiffness: 250 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      
-      const target = e.target as HTMLElement;
-      setIsHovering(
-        target.tagName.toLowerCase() === 'button' || 
-        target.tagName.toLowerCase() === 'a' || 
-        target.classList.contains('cursor-pointer') ||
-        target.closest('.glass-interactive') !== null
-      );
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    setIsMobile(isCoarse);
+
+    if (isCoarse) return;
+
+    const moveCursor = (e: MouseEvent) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+    const handleMouseDown = () => setClicked(true);
+    const handleMouseUp = () => setClicked(false);
+
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [cursorX, cursorY]);
+
+  if (isMobile) return null;
 
   return (
-    <>
-      {/* Precise Central Point */}
+    <div className="fixed inset-0 pointer-events-none z-[10000]">
+      {/* Outer Comic Pulse */}
       <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-primary rounded-full pointer-events-none z-[9999]"
+        className="fixed w-10 h-10 border-4 border-black box-content flex items-center justify-center p-1"
         style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: "-50%",
+          translateY: "-50%",
         }}
-        animate={{ scale: isHovering ? 0 : 1 }}
-      />
+        animate={{
+          scale: clicked ? 0.8 : 1,
+          rotate: clicked ? 45 : 0
+        }}
+      >
+         {/* Inner Target Point */}
+         <div className="w-2 h-2 bg-primary border-2 border-black rotate-45" />
+      </motion.div>
       
-      {/* Outer Sleek Ring */}
+      {/* Trailing Action Sticker (Optional, very subtle) */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-primary/40 pointer-events-none z-[9998]"
+        className="fixed px-2 py-0.5 bg-[#ffb703] border-2 border-black text-[8px] font-black italic shadow-[4px_4px_0px_#000] z-20"
         style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: "25px",
+          translateY: "25px",
         }}
-        animate={{ 
-          scale: isHovering ? 2.5 : 1,
-          backgroundColor: isHovering ? 'rgba(0, 227, 253, 0.05)' : 'rgba(0, 227, 253, 0)',
-          borderColor: isHovering ? 'rgba(0, 227, 253, 0.8)' : 'rgba(0, 227, 253, 0.3)',
-          borderWidth: isHovering ? '1px' : '1.5px'
+        animate={{
+           opacity: clicked ? 1 : 0,
+           rotate: -15
         }}
-      />
-
-      {/* Dynamic Glow Aura */}
-      <motion.div
-        className="fixed top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none z-[9997]"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{ 
-          opacity: isHovering ? 0.3 : 0.15,
-          scale: isHovering ? 1.2 : 1
-        }}
-      />
-    </>
+      >
+        CLICKED!
+      </motion.div>
+    </div>
   );
 };
