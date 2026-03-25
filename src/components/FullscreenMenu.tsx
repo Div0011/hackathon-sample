@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Home, Calendar, User, Zap, Shield, BarChart2 } from 'lucide-react';
 
 interface FullscreenMenuProps {
   currentView: string;
@@ -9,22 +10,10 @@ interface FullscreenMenuProps {
 export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onNavigate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isNear, setIsNear] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  const springConfig = { damping: 30, stiffness: 200 };
-  const rayX = useSpring(mouseX, springConfig);
-  const rayY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      
-      // Proximity detection (near top edge or menu trigger area)
-      if (e.clientY < 100) {
+      if (e.clientY < 80) {
         setIsNear(true);
       } else if (!isOpen) {
         setIsNear(false);
@@ -33,43 +22,42 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [isOpen, mouseX, mouseY]);
+  }, [isOpen]);
 
   const navItems = [
-    { id: 'entry', label: 'Home', desc: 'The Orbital Gateway' },
-    { id: 'dashboard', label: 'Events', desc: 'Aperture Orchestration' },
-    { id: 'profile-creation', label: 'Profile', desc: 'Neural Identity' },
-    { id: 'recommendations', label: 'Discovery', desc: 'Biological Sync' },
-    { id: 'analytics', label: 'Analytics', desc: 'Velocity Mapping' },
-    { id: 'policy', label: 'Policy', desc: 'Atmospheric Protocol' },
+    { id: 'entry', label: 'HOME', desc: 'PORTAL EXIT', icon: <Home />, color: 'bg-primary' },
+    { id: 'dashboard', label: 'EVENTS', desc: 'APERTURE LOG', icon: <Calendar />, color: 'bg-secondary' },
+    { id: 'profile-creation', label: 'PROFILE', desc: 'IDENTITY HUB', icon: <User />, color: 'bg-[#feff9c]' },
+    { id: 'recommendations', label: 'SYNC!', desc: 'NEURAL CLUSTER', icon: <Zap />, color: 'bg-primary' },
+    { id: 'analytics', label: 'STATS', desc: 'VELOCITY MAP', icon: <BarChart2 />, color: 'bg-secondary' },
+    { id: 'policy', label: 'RULES', desc: 'PROTOCOL O7', icon: <Shield />, color: 'bg-[#e0c3fc]' },
   ];
 
   return (
     <>
-      {/* Proximity Trigger */}
-      <motion.div 
-        className="fixed top-0 left-0 w-full h-2 z-[2500]"
-        onMouseEnter={() => setIsNear(true)}
-      />
-
+      {/* Top Trigger Plate (Comic Style) */}
       <AnimatePresence>
         {(isNear || isOpen) && (
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            className="fixed top-8 left-1/2 -translate-x-1/2 z-[3000] cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            exit={{ y: -100 }}
+            className="fixed top-0 left-0 right-0 h-24 z-[3000] flex justify-center items-center pointer-events-none"
           >
-            <div className="glass-blue px-8 py-3 rounded-full border border-primary/30 flex items-center gap-4 group">
-               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-               <span className="text-xs font-black uppercase tracking-[0.4em]">Aperture Menu</span>
-               <div className={`w-4 h-4 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
-                    <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-               </div>
-            </div>
+             <motion.button
+               onClick={() => setIsOpen(!isOpen)}
+               whileHover={{ y: 5 }}
+               className="pointer-events-auto w-64 h-20 bg-white border-b-8 border-x-4 border-black shadow-[10px_10px_0px_#000] flex items-center justify-between px-8 group transition-all"
+             >
+                <div className="flex items-center gap-3">
+                   <div className={`w-3 h-3 rounded-full border-2 border-black ${isOpen ? 'bg-primary' : 'bg-secondary animate-pulse'}`} />
+                   <span className="font-black tracking-[0.4em] text-[10px] italic">APERTURE MENU //</span>
+                </div>
+                <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`}>
+                   <div className="w-6 h-1 bg-black mb-1" />
+                   <div className="w-4 h-1 bg-black" />
+                </div>
+             </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -80,64 +68,73 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[2900] bg-background/95 backdrop-blur-3xl overflow-hidden"
+            className="fixed inset-0 z-[2900] bg-[#fff9fc]/98 backdrop-blur-2xl flex flex-col pt-40 pb-20 px-12 overflow-y-auto"
           >
-            {/* Volumetric Spotlight Ray */}
-            <motion.div 
-               className="absolute pointer-events-none z-10 w-[600px] h-[600px] rounded-full"
-               style={{
-                 x: rayX,
-                 y: rayY,
-                 translateX: '-50%',
-                 translateY: '-50%',
-                 background: 'radial-gradient(circle, rgba(0,227,253,0.15) 0%, rgba(0,227,253,0.05) 50%, transparent 100%)',
-                 filter: 'blur(40px)',
-                 mixBlendMode: 'screen'
-               }}
-            >
-               {/* Vertical Beam Element */}
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full w-1 h-[100vh] bg-gradient-to-t from-primary/40 to-transparent blur-sm" />
-            </motion.div>
+            {/* Cinematic Shutter (Translucent Bars) */}
+            <motion.div initial={{ x: '-100%' }} animate={{ x: '100%' }} transition={{ duration: 0.8 }} className="absolute inset-x-0 top-0 h-80 bg-primary opacity-5 skew-y-6 pointer-events-none" />
+            <motion.div initial={{ x: '100%' }} animate={{ x: '-100%' }} transition={{ duration: 0.8 }} className="absolute inset-x-0 bottom-0 h-80 bg-secondary opacity-5 -skew-y-6 pointer-events-none" />
 
-            {/* 3D Floor Grid */}
-            <div className="absolute inset-0 floor-grid opacity-30" />
-
-            {/* Floor Options */}
-            <div className="relative h-full flex items-center justify-center perspective-2000">
+            <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col items-center">
                <motion.div 
-                 className="flex flex-wrap justify-center gap-12 max-w-6xl px-12 pb-40"
-                 style={{ rotateX: 45 }}
-                 animate={{ rotateX: isOpen ? 45 : 0 }}
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 className="text-center mb-20"
                >
+                  <h3 className="text-primary font-black text-2xl tracking-[0.5em] mb-4">COMMAND CENTRE //</h3>
+                  <h2 className="text-7xl md:text-9xl font-black italic tracking-tighter text-stroke">SELECT DESTINATION!</h2>
+               </motion.div>
+
+               {/* Comic Panel Grid */}
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full">
                   {navItems.map((item, index) => (
                     <motion.button
                       key={item.id}
-                      initial={{ opacity: 0, y: 50, translateZ: -100 }}
-                      animate={{ opacity: 1, y: 0, translateZ: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{ scale: 1.1, translateZ: 50, color: '#00e3fd' }}
+                      initial={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? -20 : 20 }}
+                      animate={{ opacity: 1, scale: 1, x: 0 }}
+                      transition={{ delay: index * 0.05, ease: "circOut" }}
+                      whileHover={{ x: -8, y: -8, rotate: index % 2 === 0 ? -1 : 1 }}
                       onClick={() => {
                         onNavigate(item.id);
                         setIsOpen(false);
                       }}
-                      className={`relative group text-left p-8 rounded-3xl border border-white/5 transition-all duration-500 overflow-hidden ${
-                        currentView === item.id ? 'bg-primary/10 border-primary/20' : 'bg-white/5'
-                      }`}
+                      className={`relative group h-64 p-10 border-4 border-black shadow-[12px_12px_0px_#000] hover:shadow-[25px_25px_0px_#000] flex flex-col justify-end transition-all bg-white overflow-hidden`}
                     >
-                       <div className="absolute inset-x-0 bottom-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                       <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted group-hover:text-primary transition-colors">{item.desc}</span>
-                       <h2 className="text-4xl font-bold mt-2 tracking-tighter">{item.label}</h2>
+                       {/* Animated Halftone Pattern on Hover */}
+                       <div className="absolute inset-0 opacity-0 group-hover:opacity-10 pointer-events-none transition-opacity bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:6px_6px]" />
                        
-                       {/* Floating Particle on Hover */}
-                       <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_15px_#00e3fd]" />
+                       {/* Background Large Icon */}
+                       <div className="absolute top-4 right-4 text-black opacity-5 group-hover:opacity-15 group-hover:scale-150 transition-all duration-700">
+                          {React.cloneElement(item.icon as React.ReactElement, { size: 160 })}
+                       </div>
+
+                       <div className="relative z-10 text-left">
+                          <div className={`inline-block px-4 py-1 mb-6 text-[10px] font-black tracking-widest text-white ${item.color} border-2 border-black shadow-[4px_4px_0px_#000]`}>
+                             {item.desc}
+                          </div>
+                          <h2 className={`text-5xl font-black italic tracking-tighter ${currentView === item.id ? 'text-primary' : 'text-black'}`}>
+                             {item.label}
+                          </h2>
+                       </div>
+
+                       {/* "GOTO!" Sticker */}
+                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity scale-0 group-hover:scale-110 pointer-events-none">
+                          <div className="bg-[#feff9c] border-4 border-black px-6 py-2 font-black text-2xl rotate-[-15deg] shadow-[8px_8px_0px_#000]">GOTO!</div>
+                       </div>
                     </motion.button>
                   ))}
-               </motion.div>
-            </div>
+               </div>
 
-            {/* Close Hint */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-muted text-[10px] uppercase tracking-[0.6em] animate-pulse">
-               Click anywhere or press Esc to close
+               <motion.button
+                 onClick={() => setIsOpen(false)}
+                 className="mt-20 group relative"
+               >
+                  <div className="w-16 h-16 bg-black border-4 border-black flex items-center justify-center text-white scale-100 group-hover:scale-110 transition-transform">
+                     <X size={40} strokeWidth={3} />
+                  </div>
+                  <div className="absolute top-1/2 left-full ml-6 translate-y-[-50%] px-4 py-2 border-2 border-black font-black text-xs tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                     CLOSE COMMAND
+                  </div>
+               </motion.button>
             </div>
           </motion.div>
         )}
