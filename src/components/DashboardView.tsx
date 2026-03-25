@@ -7,7 +7,8 @@ const events = [
     id: 'e1',
     name: "AURA DREAM",
     desc: "THE ULTIMATE NEURAL MUSIC EXPERIENCE UNDER PASTEL SKIES.",
-    image: "/festival.png",
+    image: "festival.png",
+
     location: "NEO-KYOTO",
     tag: "LIVE NOW",
     color: "#e63946"
@@ -16,7 +17,8 @@ const events = [
     id: 'e2',
     name: "TECH SYNC",
     desc: "ARCHITECT THE FUTURE OF ATMOSPHERIC NETWORKING CLUSTERS.",
-    image: "/tech.png",
+    image: "tech.png",
+
     location: "HUB-B",
     tag: "IN 2 DAYS",
     color: "#ffb703"
@@ -25,7 +27,8 @@ const events = [
     id: 'e3',
     name: "PURE RETREAT",
     desc: "SYNCHRONIZE YOUR BIOLOGY IN THE NEURAL DREAMSCAPE.",
-    image: "/wellness.png",
+    image: "wellness.png",
+
     location: "ECHO VALLEY",
     tag: "NEXT MONTH",
     color: "#219ebc"
@@ -118,10 +121,12 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
                         </button>
                         
                         <div className="flex gap-4 w-full">
-                           <button onClick={prev} className="flex-1 bg-white border-4 border-black h-20 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
+                           <button title="Previous Event" onClick={prev} className="flex-1 bg-white border-4 border-black h-20 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
+
                               <ArrowLeft size={32} strokeWidth={4} />
                            </button>
-                           <button onClick={next} className="flex-1 bg-white border-4 border-black h-20 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
+                           <button title="Next Event" onClick={next} className="flex-1 bg-white border-4 border-black h-20 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_#000]">
+
                               <ArrowRight size={32} strokeWidth={4} />
                            </button>
                         </div>
