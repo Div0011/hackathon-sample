@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/hackathon-sample/', // Replace with your repository name if different
+  base: './', // More portable for various deployment environments
 })
+
 
