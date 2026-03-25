@@ -1,16 +1,52 @@
-# React + Vite
+# SCANECT - Cinematic Scrollytelling Experience 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **SCANECT** frontend design repository. This project showcases a high-end, immersive, and cinematic scrollytelling experience built with modern web technologies.
 
-Currently, two official plugins are available:
+## ✨ Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Cinematic Scrollytelling**: Powered by **GSAP** and **Lenis** for ultra-smooth transitions and immersive narrative flow.
+- **3D Visuals**: Integration of **React Three Fiber** and **Three.js** for interactive 3D elements like the AI Orb and Neural Background.
+- **Micro-Animations**: Extensive use of **Framer Motion** for refined UI interactions and micro-animations.
+- **Modern UI Architecture**: Built with **React 19**, **Vite**, and **Tailwind CSS 4.0** for performance and developer experience.
+- **Glassmorphic Design**: A premium "Obsidian Intelligence" aesthetic featuring frosted glass effects and vibrant accents.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: [React 19](https://react.dev/)
+- **Bundler**: [Vite 8](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS 4.0](https://tailwindcss.com/)
+- **Animation**: [GSAP](https://greensock.com/gsap/), [Framer Motion](https://www.framer.com/motion/), [Lenis](https://github.com/darkroomengineering/lenis)
+- **3D Engine**: [Three.js](https://threejs.org/) / [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction)
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Div0011/hackathon-sample.git
+   cd hackathon-sample
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+## 📂 Project Structure
+
+- `src/components`: UI components (Orb, NeuralBackground, Dashboard, etc.)
+- `src/index.css`: Tailwind CSS configuration and custom styling.
+- `public/`: Static assets.
+
+---
+
+Designed and developed with passion 🖤
