@@ -82,7 +82,7 @@ function App() {
     <div className="relative w-full bg-background selection:bg-primary/30 min-h-screen text-white overflow-x-hidden">
       <CustomCursor />
       <NeuralBackground />
-      <Snowfall />
+
 
       <FullscreenMenu currentView={view} onNavigate={setView} />
 
