@@ -13,6 +13,33 @@
 
   --font-display: "Space Grotesk", sans-serif;
   --font-sans: "Inter", sans-serif;
+
+  /* Responsive Spacing & Scaling */
+  --comic-shadow: 15px 15px 0px #000;
+  --comic-shadow-sm: 8px 8px 0px #000;
+  --comic-border: 4px;
+  --comic-border-lg: 8px;
+}
+
+:root {
+  @media (max-width: 768px) {
+    --comic-shadow: 8px 8px 0px #000;
+    --comic-shadow-sm: 4px 4px 0px #000;
+    --comic-border: 2px;
+    --comic-border-lg: 4px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 13.5px; /* Global zoom-out (~85%) for laptop screens */
+  }
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 15px; /* Slightly larger for 2K/4K screens if needed, but still reduced from standard 16px */
+  }
 }
 
 @layer base {
@@ -20,6 +47,12 @@
     @apply bg-background text-[#1e272e] font-sans selection:bg-secondary/40 antialiased;
     overflow-x: hidden;
     cursor: none;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      cursor: auto; /* Restore default cursor on mobile touch devices */
+    }
   }
 
   /* Global Vintage Halftone & Paper Texture */
@@ -47,15 +80,15 @@
 
 .glass {
   background: white;
-  border: 4px solid #000;
-  box-shadow: 15px 15px 0px #000;
+  border: var(--comic-border-lg) solid #000;
+  box-shadow: var(--comic-shadow);
 }
 
 .glass-interactive {
   @apply transition-all duration-200;
   background: white;
-  border: 4px solid #000;
-  box-shadow: 8px 8px 0px #000;
+  border: var(--comic-border) solid #000;
+  box-shadow: var(--comic-shadow-sm);
 }
 
 .glass-interactive:hover {
@@ -67,8 +100,14 @@
   @apply relative overflow-hidden transition-all duration-200 font-black tracking-widest uppercase;
   background: #e63946;
   color: #fff;
-  border: 4px solid #000;
+  border: var(--comic-border) solid #000;
   box-shadow: 10px 10px 0px #000;
+}
+
+@media (max-width: 768px) {
+  .btn-premium {
+    box-shadow: 6px 6px 0px #000;
+  }
 }
 
 .btn-premium:hover {
@@ -79,7 +118,9 @@
 }
 
 .btn-outline {
-  @apply border-4 border-black bg-white text-black backdrop-blur-md transition-all hover:bg-black hover:text-white font-bold tracking-widest uppercase shadow-[10px_10px_0px_#000];
+  @apply border-black bg-white text-black backdrop-blur-md transition-all hover:bg-black hover:text-white font-bold tracking-widest uppercase;
+  border-width: var(--comic-border);
+  box-shadow: var(--comic-shadow-sm);
 }
 
 /* Vintage Image Filter */
@@ -127,6 +168,13 @@
 .text-stroke {
   -webkit-text-stroke: 4px #000;
 }
+
+@media (max-width: 768px) {
+  .text-stroke {
+    -webkit-text-stroke: 2px #000;
+  }
+}
+
 @supports not (-webkit-text-stroke: 4px #000) {
   .text-stroke {
     text-shadow: 

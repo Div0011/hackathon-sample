@@ -27,20 +27,20 @@ const bubbleData = [
 
 export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () => {
   return (
-    <section className="relative min-h-screen w-full pt-48 pb-32 px-12 overflow-hidden bg-[#fffdf2]">
+    <section className="relative min-h-screen w-full pt-24 md:pt-48 pb-20 md:pb-32 px-6 md:px-12 overflow-hidden bg-[#fffdf2]">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.h1 
            initial={{ x: -50, opacity: 0 }}
            animate={{ x: 0, opacity: 1 }}
-           className="text-7xl md:text-9xl font-black italic tracking-tighter text-stroke mb-20 lowercase"
+           className="text-5xl md:text-9xl font-black italic tracking-tighter text-stroke mb-12 md:mb-20 lowercase"
         >
-           neural <span className="bg-[#ffb703] not-italic px-6 text-black">analytics//</span>
+           neural <span className="bg-[#ffb703] not-italic px-4 md:px-6 text-black">analytics//</span>
         </motion.h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {/* Line Chart */}
-          <div className="bg-white border-4 border-black p-10 shadow-[15px_15px_0px_#000] h-[450px]">
-            <h3 className="text-xl font-black mb-8 italic border-b-4 border-black pb-4 uppercase">User Velocity //</h3>
+          <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[10px_10px_0px_#000] md:shadow-[15px_15px_0px_#000] h-[350px] md:h-[450px]">
+            <h3 className="text-lg md:text-xl font-black mb-6 md:mb-8 italic border-b-4 border-black pb-4 uppercase">User Velocity //</h3>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -55,8 +55,8 @@ export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () 
           </div>
 
           {/* Bar Chart */}
-          <div className="bg-white border-4 border-black p-10 shadow-[15px_15px_0px_#000] h-[450px]">
-            <h3 className="text-xl font-black mb-8 italic border-b-4 border-black pb-4 uppercase">Sync Density //</h3>
+          <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[10px_10px_0px_#000] md:shadow-[15px_15px_0px_#000] h-[350px] md:h-[450px]">
+            <h3 className="text-lg md:text-xl font-black mb-6 md:mb-8 italic border-b-4 border-black pb-4 uppercase">Sync Density //</h3>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -68,10 +68,10 @@ export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () 
           </div>
 
           {/* Bubble Chart */}
-          <div className="bg-white border-4 border-black p-10 shadow-[20px_20px_0px_#000] h-[500px] col-span-1 lg:col-span-2">
-            <div className="flex justify-between items-center mb-10">
-               <h3 className="text-xl font-black italic border-b-4 border-black pb-4 uppercase">Cluster Distribution //</h3>
-               <div className="bg-black text-white px-4 py-1 text-xs font-black">MODE: VINTAGE_SCAN</div>
+          <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[15px_15px_0px_#000] md:shadow-[20px_20px_0px_#000] h-[400px] md:h-[500px] col-span-1 lg:col-span-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-10 gap-4">
+               <h3 className="text-lg md:text-xl font-black italic border-b-4 border-black pb-4 uppercase">Cluster Distribution //</h3>
+               <div className="bg-black text-white px-3 md:px-4 py-1 text-[10px] md:text-xs font-black">MODE: VINTAGE_SCAN</div>
             </div>
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart>

@@ -33,7 +33,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({ currentView, onNav
   ];
 
   return (
-    <nav className="fixed top-8 left-1/2 -translate-x-1/2 z-[1000] w-auto">
+    <nav className="fixed top-8 left-1/2 -translate-x-1/2 z-[1000] w-auto hidden md:block">
       <motion.div
         ref={navRef}
         onMouseMove={handleMouseMove}

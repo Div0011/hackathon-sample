@@ -6,58 +6,61 @@ interface PlatformPolicyViewProps {
   onNavigate?: (view: any) => void;
 }
 
-export const PlatformPolicyView: React.FC<PlatformPolicyViewProps> = () => {
+export const PlatformPolicyView: React.FC<PlatformPolicyViewProps> = ({ onNavigate }) => {
   return (
-    <section className="relative min-h-screen w-full pt-48 pb-32 px-12 bg-[#fffdf2] overflow-hidden">
+    <section className="relative min-h-screen w-full pt-28 md:pt-48 pb-20 md:pb-32 px-6 md:px-12 bg-[#fffdf2] overflow-hidden">
       <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center">
          
          <motion.div 
            initial={{ scale: 0.8, rotate: -5, opacity: 0 }}
            animate={{ scale: 1, rotate: 0, opacity: 1 }}
-           className="w-full bg-white border-8 border-black p-12 md:p-24 shadow-[30px_30px_0px_#000] mb-20 relative overflow-hidden"
+           className="w-full bg-white border-4 md:border-8 border-black p-6 md:p-24 shadow-[15px_15px_0px_#000] md:shadow-[30px_30px_0px_#000] mb-8 md:mb-20 relative overflow-hidden"
          >
             {/* Comic Background Textures */}
             <div className="absolute top-0 right-0 h-40 w-40 bg-[#e63946] -translate-y-1/2 translate-x-1/2 rotate-45 opacity-10" />
             <div className="absolute bottom-0 left-0 h-80 w-80 bg-[#ffb703] translate-y-1/2 -translate-x-1/2 rotate-45 opacity-10" />
 
-            <h1 className="text-8xl md:text-[10rem] font-black italic tracking-tighter text-stroke mb-12 text-center leading-none">
-               POLICY <span className="bg-black text-[#ffb703] not-italic px-4">CORE//</span>
+            <h1 className="text-4xl md:text-[10rem] font-black italic tracking-tighter text-stroke mb-6 md:mb-12 text-center leading-none">
+               POLICY <span className="bg-black text-[#ffb703] not-italic px-4 md:px-4">CORE//</span>
             </h1>
 
-            <div className="space-y-16 mt-16 text-xl md:text-2xl font-bold leading-[1.1] italic lowercase max-w-2xl mx-auto border-l-8 border-black pl-12">
+            <div className="space-y-8 md:space-y-16 mt-8 md:mt-16 text-sm md:text-2xl font-bold leading-tight italic lowercase max-w-2xl mx-auto border-l-4 md:border-l-8 border-black pl-5 md:pl-12">
                <div className="relative">
-                  <div className="flex items-center gap-4 mb-6 text-primary">
-                     <ShieldAlert size={32} />
-                     <h3 className="text-3xl font-black uppercase tracking-widest italic">NEURAL IDENTITY PROTECTION</h3>
+                  <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6 text-primary">
+                     <ShieldAlert size={20} className="md:w-8 md:h-8" />
+                     <h3 className="text-lg md:text-3xl font-black uppercase tracking-widest italic leading-none">NEURAL PROTECTION</h3>
                   </div>
-                  <p className="opacity-70">
+                  <p className="opacity-70 leading-tight">
                      "EVERY BIOLOGICAL SIGNATURE IS ENCRYPTED VIA APERTURE O7 PROTOCOLS. YOUR IDENTITY IS YOUR ARCHITECTURE."
                   </p>
                </div>
 
                <div className="relative">
-                  <div className="flex items-center gap-4 mb-6 text-secondary">
-                     <Fingerprint size={32} />
-                     <h3 className="text-3xl font-black uppercase tracking-widest italic">BIOMETRIC SYNC GUIDELINES</h3>
+                  <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6 text-secondary">
+                     <Fingerprint size={20} className="md:w-8 md:h-8" />
+                     <h3 className="text-lg md:text-3xl font-black uppercase tracking-widest italic leading-none">BIOMETRIC SYNC</h3>
                   </div>
-                  <p className="opacity-70">
+                  <p className="opacity-70 leading-tight">
                      "SYNCHRONIZATION REQUIRES A CLEAR NEURAL FIELD. ALL DATA IS VOLUNTEER-DRIVEN AND NON-PERSISTENT."
                   </p>
                </div>
 
                <div className="relative">
-                  <div className="flex items-center gap-4 mb-6 text-tertiary">
-                     <BookOpen size={32} />
-                     <h3 className="text-3xl font-black uppercase tracking-widest italic">THE APERTURE CODE</h3>
+                  <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6 text-tertiary">
+                     <BookOpen size={20} className="md:w-8 md:h-8" />
+                     <h3 className="text-lg md:text-3xl font-black uppercase tracking-widest italic leading-none">THE APERTURE CODE</h3>
                   </div>
-                  <p className="opacity-70">
+                  <p className="opacity-70 leading-tight">
                      "NETWORK WITH PURPOSE. ALL SYNCED EVENTS ARE SUBJECT TO HIGH-LEVEL GOVERNANCE."
                   </p>
                </div>
             </div>
          </motion.div>
 
-         <button className="btn-premium px-24 py-8 text-4xl italic shadow-[20px_20px_0px_#000] hover:shadow-[35px_35px_0px_#000] transition-all">
+         <button 
+           onClick={() => onNavigate && onNavigate('profile-creation')}
+           className="btn-premium px-10 md:px-24 py-4 md:py-8 text-xl md:text-4xl italic shadow-[8px_8px_0px_#000] md:shadow-[20px_20px_0px_#000] hover:shadow-[15px_15px_0px_#000] md:hover:shadow-[35px_35px_0px_#000] transition-all active:translate-y-1"
+         >
             I AGREE TO SYNC!
          </button>
       </div>
