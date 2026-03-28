@@ -28,6 +28,31 @@ type ViewState = 'entry' | 'login' | 'welcome' | 'dashboard' | 'register-event' 
 function App() {
   const [view, setView] = useState<ViewState>('entry');
 
+  const navigateTo = (newView: ViewState) => {
+    if (newView !== view) {
+      window.history.pushState({ view: newView }, '', '');
+      setView(newView);
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        setView(event.state.view);
+      } else {
+        setView('entry');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    // Initial state
+    if (!window.history.state) {
+      window.history.replaceState({ view: 'entry' }, '', '');
+    }
+    
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -88,7 +113,7 @@ function App() {
       <NeuralBackground />
 
 
-      <FullscreenMenu currentView={view} onNavigate={setView} />
+      <FullscreenMenu currentView={view} onNavigate={navigateTo} />
 
       <main className="relative z-10 w-full min-h-screen">
         <AnimatePresence mode="wait">
@@ -100,16 +125,16 @@ function App() {
             variants={pageVariants}
             className="w-full flex-1"
           >
-            {view === 'entry' && <EntryView onSelect={() => setView('login')} />}
-            {view === 'login' && <LoginView onLogin={() => setView('welcome')} />}
-            {view === 'welcome' && <WelcomeView onSelectOption={(opt) => opt === 'take-part' ? setView('dashboard') : setView('register-event')} />}
-            {view === 'dashboard' && <DashboardView onNavigate={(v) => setView(v as any)} />}
-            {view === 'register-event' && <EventRegistrationView onComplete={() => setView('profile-creation')} />}
-            {view === 'profile-creation' && <ProfileCreationView onNavigate={setView} />}
-            {view === 'recommendations' && <UserRecommendationView onNavigate={setView} />}
+            {view === 'entry' && <EntryView onSelect={() => navigateTo('login')} />}
+            {view === 'login' && <LoginView onLogin={() => navigateTo('welcome')} />}
+            {view === 'welcome' && <WelcomeView onSelectOption={(opt: any) => opt === 'take-part' ? navigateTo('dashboard') : navigateTo('register-event')} />}
+            {view === 'dashboard' && <DashboardView onNavigate={(v: any) => navigateTo(v as any)} />}
+            {view === 'register-event' && <EventRegistrationView onComplete={() => navigateTo('profile-creation')} />}
+            {view === 'profile-creation' && <ProfileCreationView onNavigate={navigateTo} />}
+            {view === 'recommendations' && <UserRecommendationView onNavigate={navigateTo} />}
 
             {view === 'analytics' && <AnalyticsDashboardView />}
-            {view === 'policy' && <PlatformPolicyView onNavigate={setView} />}
+            {view === 'policy' && <PlatformPolicyView onNavigate={navigateTo} />}
             {view === 'lounge' && <TheLounge />}
 
           </motion.div>
@@ -136,17 +161,17 @@ function App() {
                <div>
                   <h4 className="text-primary text-lg md:text-xl mb-6 md:mb-8 underline decoration-2 md:decoration-4 uppercase">NAVIGATION</h4>
                   <ul className="space-y-3 md:space-y-4 text-base md:text-lg font-black italic">
-                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => setView('dashboard')}>EVENTS //</li>
-                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => setView('profile-creation')}>PROFILE //</li>
-                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => setView('recommendations')}>MATCHED //</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('dashboard')}>EVENTS //</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('profile-creation')}>PROFILE //</li>
+                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('recommendations')}>MATCHED //</li>
                   </ul>
                </div>
                <div>
                   <h4 className="text-secondary text-lg md:text-xl mb-6 md:mb-8 underline decoration-2 md:decoration-4 uppercase">SYNC DATA</h4>
                   <ul className="space-y-3 md:space-y-4 text-base md:text-lg font-black italic">
-                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => setView('analytics')}>ANALYTICS //</li>
-                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => setView('lounge')}>THE LOUNGE //</li>
-                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => setView('policy')}>PROTOCOL O7 //</li>
+                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => navigateTo('analytics')}>ANALYTICS //</li>
+                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => navigateTo('lounge')}>THE LOUNGE //</li>
+                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => navigateTo('policy')}>PROTOCOL O7 //</li>
                   </ul>
                </div>
                <div className="hidden lg:block">

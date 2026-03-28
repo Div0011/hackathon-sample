@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 interface NavigationBarProps {
@@ -33,7 +34,16 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({ currentView, onNav
   ];
 
   return (
-    <nav className="fixed top-8 left-1/2 -translate-x-1/2 z-[1000] w-auto hidden md:block">
+    <nav className="fixed top-8 left-1/2 -translate-x-1/2 z-[1000] w-auto hidden md:flex items-center">
+      {/* Back Button on the top left */}
+      <button
+        onClick={() => window.history.back()}
+        className="mr-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 border border-white/30 shadow text-black hover:bg-primary hover:text-white transition-all font-black uppercase"
+        aria-label="Back to previous page"
+      >
+        <ArrowLeft size={20} />
+        <span className="hidden md:inline">Back</span>
+      </button>
       <motion.div
         ref={navRef}
         onMouseMove={handleMouseMove}

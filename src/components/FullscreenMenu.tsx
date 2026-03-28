@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Calendar, User, Zap, Shield, BarChart2, LogOut } from 'lucide-react';
+import { X, Home, Calendar, User, Zap, Shield, BarChart2, LogOut, ArrowLeft } from 'lucide-react';
 
 interface FullscreenMenuProps {
   currentView: string;
@@ -44,18 +44,18 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
             exit={{ y: -100 }}
             className="fixed top-0 left-0 right-0 h-20 md:h-24 z-[3000] flex justify-between items-center px-6 md:px-12 pointer-events-none"
           >
-             {/* TOP LEFT: LOGOUT */}
+             {/* TOP LEFT: BACK BUTTON */}
              <motion.button
                onClick={() => {
-                 onNavigate('entry');
+                 window.history.back();
                  setIsOpen(false);
                }}
                whileHover={{ scale: 1.1 }}
                whileTap={{ scale: 0.9 }}
-               className="pointer-events-auto h-12 md:h-16 px-4 md:px-6 bg-black text-white border-2 md:border-4 border-black shadow-[4px_4px_0px_#000] flex items-center justify-center gap-3 group transition-all"
+               className="pointer-events-auto h-12 md:h-16 w-12 md:w-16 bg-black text-white border-2 md:border-4 border-black shadow-[4px_4px_0px_#000] flex items-center justify-center group transition-all"
+               title="Back to previous page"
              >
-                <LogOut size={20} className="md:w-6 md:h-6" />
-                <span className="font-black italic text-xs md:text-sm tracking-widest hidden sm:block">LOGOUT</span>
+                <ArrowLeft size={24} className="md:w-8 md:h-8" />
              </motion.button>
 
              {/* TOP RIGHT: MENU HINT */}
@@ -131,17 +131,31 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
                   ))}
                </div>
 
-                <motion.button
-                  onClick={() => setIsOpen(false)}
-                  className="mt-8 md:mt-12 group relative"
-                >
-                   <div className="w-12 h-12 md:w-14 md:h-14 bg-black border-4 border-black flex items-center justify-center text-white scale-100 group-hover:scale-110 transition-transform">
-                      <X size={24} className="md:w-8 md:h-8" strokeWidth={4} />
-                   </div>
-                   <div className="absolute top-1/2 left-full ml-4 md:ml-6 translate-y-[-50%] px-4 py-2 border-2 border-black font-black text-[8px] md:text-[10px] tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all">
-                      CLOSE COMMAND
-                   </div>
-                </motion.button>
+                <div className="mt-8 md:mt-12 flex flex-col md:flex-row items-center gap-6 md:gap-12">
+                   <motion.button
+                     onClick={() => {
+                       onNavigate('entry');
+                       setIsOpen(false);
+                     }}
+                     whileHover={{ x: 5 }}
+                     className="group flex items-center gap-4 px-8 py-4 bg-black text-white border-4 border-black shadow-[6px_6px_0px_#000] hover:shadow-[10px_10px_0px_#000] transition-all"
+                   >
+                      <LogOut size={24} className="group-hover:rotate-12 transition-transform" />
+                      <span className="font-black italic text-xl tracking-widest">LOGOUT SYNC!</span>
+                   </motion.button>
+
+                   <motion.button
+                     onClick={() => setIsOpen(false)}
+                     className="group relative"
+                   >
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white border-4 border-black flex items-center justify-center text-black scale-100 group-hover:scale-110 transition-transform shadow-[6px_6px_0px_#000]">
+                         <X size={24} className="md:w-10 md:h-10" strokeWidth={4} />
+                      </div>
+                      <div className="absolute top-1/2 left-full ml-4 md:ml-6 translate-y-[-50%] px-4 py-2 border-2 border-black font-black text-[8px] md:text-[10px] tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all bg-white">
+                         CLOSE COMMAND
+                      </div>
+                   </motion.button>
+                </div>
             </div>
           </motion.div>
         )}
