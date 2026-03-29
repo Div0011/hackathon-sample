@@ -14,6 +14,7 @@ import { TheLounge } from './components/TheLounge';
 import { LoginView } from './components/LoginView';
 import { WelcomeView } from './components/WelcomeView';
 import { EventRegistrationView } from './components/EventRegistrationView';
+import { EventCreationView } from './components/EventCreationView';
 
 
 import { NeuralBackground } from './components/NeuralBackground';
@@ -22,7 +23,8 @@ import { CustomCursor } from './components/CustomCursor';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type ViewState = 'entry' | 'login' | 'welcome' | 'dashboard' | 'register-event' | 'profile-creation' | 'recommendations' | 'analytics' | 'policy' | 'lounge';
+type ViewState = 'entry' | 'login' | 'welcome' | 'dashboard' | 'register-event' | 'event-creation' | 'profile-creation' | 'recommendations' | 'analytics' | 'policy' | 'lounge';
+
 
 
 function App() {
@@ -130,7 +132,9 @@ function App() {
             {view === 'welcome' && <WelcomeView onSelectOption={(opt: any) => opt === 'take-part' ? navigateTo('dashboard') : navigateTo('register-event')} />}
             {view === 'dashboard' && <DashboardView onNavigate={(v: any) => navigateTo(v as any)} />}
             {view === 'register-event' && <EventRegistrationView onComplete={() => navigateTo('profile-creation')} />}
+            {view === 'event-creation' && <EventCreationView onComplete={() => navigateTo('dashboard')} />}
             {view === 'profile-creation' && <ProfileCreationView onNavigate={navigateTo} />}
+
             {view === 'recommendations' && <UserRecommendationView onNavigate={navigateTo} />}
 
             {view === 'analytics' && <AnalyticsDashboardView />}
@@ -147,7 +151,8 @@ function App() {
             <div>
                <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
                   <div className="w-12 h-12 md:w-16 md:h-16 bg-primary border-2 md:border-4 border-black shadow-[4px_4px_0px_#000] md:shadow-[8px_8px_0px_#000] flex items-center justify-center font-black text-2xl md:text-3xl text-white shrink-0">S</div>
-                  <span className="text-3xl md:text-4xl tracking-tighter italic">SCANECT // SYNC!</span>
+                  <span className="text-3xl md:text-4xl tracking-tighter italic">SCANECT</span>
+
                </div>
                <p className="text-black text-lg md:text-xl font-black italic max-w-lg mb-8 md:mb-10 leading-none border-l-4 md:border-l-8 border-black pl-6 md:pl-8 lowercase">
                  THE FUTURE OF ATMOSPHERIC NETWORKING IN HIGH-CONTRAST NEURAL PASTEL.

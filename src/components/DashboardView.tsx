@@ -6,7 +6,8 @@ const events = [
   {
     id: 'e1',
     name: "AURA DREAM",
-    desc: "THE ULTIMATE NEURAL MUSIC EXPERIENCE UNDER PASTEL SKIES.",
+    desc: "THE ULTIMATE MUSIC EXPERIENCE UNDER THE STARS.",
+
     image: "festival.png",
 
     location: "NEO-KYOTO",
@@ -16,7 +17,8 @@ const events = [
   {
     id: 'e2',
     name: "TECH SYNC",
-    desc: "ARCHITECT THE FUTURE OF ATMOSPHERIC NETWORKING CLUSTERS.",
+    desc: "BUILD THE FUTURE OF NETWORKING AND CONNECTIONS.",
+
     image: "tech.png",
 
     location: "HUB-B",
@@ -26,7 +28,8 @@ const events = [
   {
     id: 'e3',
     name: "PURE RETREAT",
-    desc: "SYNCHRONIZE YOUR BIOLOGY IN THE NEURAL DREAMSCAPE.",
+    desc: "A UNIQUE EXPERIENCE DESIGNED FOR PERSONAL GROWTH.",
+
     image: "wellness.png",
 
     location: "ECHO VALLEY",
@@ -47,10 +50,12 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
       
       {/* SHUTTER BARS (Cinematic Letterboxing) */}
       <div className="absolute top-0 inset-x-0 h-16 md:h-24 bg-black z-30 pointer-events-none flex items-end justify-center pb-4 md:pb-6">
-         <span className="text-white text-[8px] md:text-[10px] font-black tracking-[1em] opacity-40 italic">APERTURE LOG // EVENT GRID V3</span>
+         <span className="text-white text-[8px] md:text-[10px] font-black tracking-[1em] opacity-40 italic">EVENT DASHBOARD // ALPHA</span>
+
       </div>
       <div className="absolute bottom-0 inset-x-0 h-16 md:h-24 bg-black z-30 pointer-events-none flex items-start justify-center pt-4 md:pt-6">
-         <span className="text-white text-[8px] md:text-[10px] font-black tracking-[1em] opacity-40 italic">PASTEL SYNC // RUNTIME 3.0.4</span>
+         <span className="text-white text-[8px] md:text-[10px] font-black tracking-[1em] opacity-40 italic">UPCOMING OPPORTUNITIES</span>
+
       </div>
 
       {/* BACKGROUND DEPTH (Halftone dots) */}
@@ -105,7 +110,7 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
                       className="w-full"
                     >
                        <p className="text-primary font-black text-lg md:text-xl tracking-[0.4em] mb-4 italic leading-none border-l-4 md:border-l-8 border-black pl-4 md:pl-6 lowercase">
-                          atmospheric syncing cluster //
+                          upcoming events //
                        </p>
                        <h2 className="text-4xl md:text-8xl font-black italic tracking-tighter leading-none mb-6 md:mb-8 text-stroke">
                           {current.name}
@@ -123,7 +128,7 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
                        onClick={() => onNavigate('profile-creation')}
                        className="flex-1 btn-premium py-5 md:py-8 text-xl md:text-3xl italic shadow-[8px_8px_0px_#000] md:shadow-[15px_15px_0px_#000] hover:shadow-[20px_20px_0px_#000] flex items-center justify-center gap-4 group"
                      >
-                        {current.tag === 'LIVE NOW' ? 'TAKE PART!' : 'REGISTER!'} 
+                        {current.tag === 'LIVE NOW' ? 'JOIN NOW!' : 'REGISTER!'} 
                         <Ticket size={24} className="md:w-8 md:h-8 group-hover:rotate-12 transition-transform" strokeWidth={3} />
                      </button>
                      
@@ -153,10 +158,22 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
          <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                <div>
-                  <h2 className="text-4xl md:text-8xl font-black italic tracking-tighter text-stroke leading-none uppercase">UPCOMING <span className="bg-primary text-white not-italic px-4">SYNCS//</span></h2>
-                  <p className="text-lg md:text-2xl font-black mt-6 md:mt-8 italic opacity-60 lowercase max-w-xl border-l-8 border-black pl-8">"register for the next biological clusters in the high-performance pipeline."</p>
+                  <h2 className="text-4xl md:text-8xl font-black italic tracking-tighter text-stroke leading-none uppercase">UPCOMING <span className="bg-primary text-white not-italic px-4">EVENTS//</span></h2>
+
+                  <p className="text-lg md:text-2xl font-black mt-6 md:mt-8 italic opacity-60 lowercase max-w-xl border-l-8 border-black pl-8">"register for the networking events in the high-performance pipeline."</p>
+
                </div>
-               <div className="bg-black text-[#ffb703] px-6 py-3 font-black text-xl italic shadow-[8px_8px_0px_#000]">V3.0.4 CORE</div>
+               <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+                  <button 
+                    onClick={() => onNavigate('event-creation')}
+                    className="bg-[#185FA5] text-white px-8 py-4 font-black text-xl md:text-3xl italic shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] hover:-translate-y-2 transition-all flex items-center gap-4 rotate-[-2deg]"
+                  >
+                    CREATE NEW EVENT <Ticket size={32} />
+                  </button>
+                  <div className="bg-black text-[#ffb703] px-6 py-3 font-black text-xl italic shadow-[8px_8px_0px_#000]">SCANECT v3</div>
+
+               </div>
+
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">

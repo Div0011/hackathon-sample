@@ -20,10 +20,12 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onSelectOption }) => {
            className="text-left"
          >
             <h1 className="text-6xl md:text-[10rem] font-black italic tracking-tighter text-stroke leading-none uppercase mb-8 md:mb-12">
-               CHOOSE <span className="bg-black text-[#ffb703] not-italic px-4">PATH//</span>
+               GET STARTED <span className="bg-black text-[#ffb703] not-italic px-4">NOW//</span>
+
             </h1>
             <p className="text-xl md:text-3xl font-black italic max-w-lg mb-12 md:mb-16 lowercase border-l-8 border-black pl-8">
-               "the neural dreamscape offers two modes of synchronization. will you observe or will you architect?"
+               "discover events to join or host your own networking hub."
+
             </p>
          </motion.div>
 
@@ -40,8 +42,10 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onSelectOption }) => {
                   <Zap size={60} strokeWidth={3} />
                </div>
                <div>
-                  <h3 className="text-3xl md:text-6xl font-black italic tracking-tighter uppercase leading-none mb-2 md:mb-4">TAKE PART!</h3>
-                  <p className="text-lg md:text-2xl font-bold lowercase opacity-60 italic">"synchronize with existing atmospheric clusters."</p>
+                  <h3 className="text-3xl md:text-6xl font-black italic tracking-tighter uppercase leading-none mb-2 md:mb-4">ATTEND EVENT</h3>
+
+                  <p className="text-lg md:text-2xl font-bold lowercase opacity-60 italic">"join existing networking events."</p>
+
                </div>
                <ArrowRight size={40} className="absolute bottom-8 right-8 text-black opacity-20 group-hover:opacity-100 group-hover:translate-x-4 transition-all" />
             </motion.button>
@@ -58,8 +62,10 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onSelectOption }) => {
                   <PlusSquare size={60} strokeWidth={3} />
                </div>
                <div>
-                  <h3 className="text-3xl md:text-6xl font-black italic tracking-tighter uppercase leading-none mb-2 md:mb-4">ARCHITECT!</h3>
-                  <p className="text-lg md:text-2xl font-bold lowercase opacity-60 italic text-black">"organize and deploy your own neural event."</p>
+                  <h3 className="text-3xl md:text-6xl font-black italic tracking-tighter uppercase leading-none mb-2 md:mb-4">HOST EVENT</h3>
+
+                  <p className="text-lg md:text-2xl font-bold lowercase opacity-60 italic text-black">"organize and grow your own networking event."</p>
+
                </div>
                <ArrowRight size={40} className="absolute bottom-8 right-8 text-black opacity-20 group-hover:opacity-100 group-hover:translate-x-4 transition-all" />
             </motion.button>

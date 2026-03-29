@@ -97,7 +97,8 @@ const UserCard = ({ name, role, id, isSelected, onSelect }: {
                    </div>
 
                    <div>
-                      <span className="text-[10px] md:text-sm font-black text-primary tracking-[0.2em] md:tracking-[0.4em] mb-4 md:mb-6 block">// NEURAL CLUSTER IDENTITY</span>
+                      <span className="text-[10px] md:text-sm font-black text-primary tracking-[0.2em] md:tracking-[0.4em] mb-4 md:mb-6 block">// USER PROFILE</span>
+
                       <h3 className="text-4xl md:text-8xl font-black mb-4 md:mb-6 tracking-tighter italic text-stroke leading-none uppercase">{name}</h3>
                       <p className="text-lg md:text-2xl font-black opacity-60 mb-6 md:mb-12 lowercase border-l-4 md:border-l-8 border-black pl-4 md:pl-8 italic">{role}</p>
                       
@@ -115,14 +116,16 @@ const UserCard = ({ name, role, id, isSelected, onSelect }: {
                 >
                    <div className="relative mb-8 md:mb-12 scale-75 md:scale-90">
                       <div className="absolute -top-10 md:-top-12 -left-10 md:-left-12 bg-[#ffb703] border-2 md:border-4 border-black px-6 md:px-10 py-2 md:py-4 font-black text-xl md:text-2xl rotate-[-15deg] shadow-[6px_6px_0px_#000] md:shadow-[8px_8px_0px_#000] z-20 uppercase">SCAN ME!</div>
-                      <div className="absolute -bottom-6 md:-bottom-8 -right-6 md:-right-8 bg-black border-2 md:border-4 border-black px-6 md:px-8 py-1 md:py-2 font-black text-[8px] md:text-xs rotate-[10deg] shadow-[6px_6px_0px_#000] md:shadow-[8px_8px_0px_#000] z-20 text-white italic uppercase">SYNC CORE </div>
+                      <div className="absolute -bottom-6 md:-bottom-8 -right-6 md:-right-8 bg-black border-2 md:border-4 border-black px-6 md:px-8 py-1 md:py-2 font-black text-[8px] md:text-xs rotate-[10deg] shadow-[6px_6px_0px_#000] md:shadow-[8px_8px_0px_#000] z-20 text-white italic uppercase">SCANECT</div>
+
                       
                       <div className="bg-white p-6 md:p-8 border-4 md:border-8 border-black shadow-[15px_15px_0px_#000] md:shadow-[20px_20px_0px_#000]">
                          <QRCodeSVG value={`https://scanect.io/user/${id}`} size={180} className="md:w-[220px] md:h-[220px]" fgColor="#000" />
                       </div>
                    </div>
-                   <h4 className="text-2xl md:text-5xl font-black mb-4 md:mb-6 tracking-tighter italic uppercase underline decoration-4 md:decoration-8 decoration-[#e63946] underline-offset-4 md:underline-offset-8 text-center">BIOLOGICAL HANDSHAKE</h4>
-                   <p className="text-base md:text-2xl font-black text-center max-w-xs md:max-w-md italic lowercase opacity-60">"synchronize your biological signature with this identity cluster."</p>
+                   <h4 className="text-2xl md:text-5xl font-black mb-4 md:mb-6 tracking-tighter italic uppercase underline decoration-4 md:decoration-8 decoration-[#e63946] underline-offset-4 md:underline-offset-8 text-center">CONNECT NOW</h4>
+                   <p className="text-base md:text-2xl font-black text-center max-w-xs md:max-w-md italic lowercase opacity-60">"scan to connect with this user instantly."</p>
+
                 </div>
               </motion.div>
             </motion.div>
@@ -137,10 +140,11 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const users = [
-    { name: "ALPHA NEURON", role: "AI ARCHITECT", id: "u1" },
-    { name: "SYMMETRY LAB", role: "UX VISIONS", id: "u2" },
-    { name: "FLUX CORE", role: "MOTION DESIGN", id: "u3" },
-    { name: "DELTA SIGNAL", role: "DATA SCIENCE", id: "u4" },
+    { name: "ALEX SMITH", role: "SOFTWARE ENGINEER", id: "u1" },
+    { name: "SARA JANE", role: "PRODUCT DESIGNER", id: "u2" },
+    { name: "MIKE ROSS", role: "DATA SCIENTIST", id: "u3" },
+    { name: "LISA WONG", role: "WEB DEVELOPER", id: "u4" },
+
   ];
 
   return (
@@ -150,10 +154,11 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
            className="mb-16 md:mb-24"
            animate={{ opacity: selectedId ? 0 : 1 }}
         >
-           <h1 className="text-6xl md:text-[11rem] font-black italic tracking-tighter text-stroke leading-none lowercase">neural <span className="bg-[#ffb703] px-4 md:px-6 text-black not-italic">discovery//</span></h1>
+           <h1 className="text-6xl md:text-[11rem] font-black italic tracking-tighter text-stroke leading-none lowercase">member <span className="bg-[#ffb703] px-4 md:px-6 text-black not-italic">discovery//</span></h1>
            <p className="text-lg md:text-2xl font-black mt-8 md:mt-12 lowercase italic border-l-4 md:border-l-8 border-black pl-6 md:pl-8 max-w-2xl">
-              "synchronize with peer clusters across the high-performance cinematic ecosystem."
+              "connect with peer members across the scanect ecosystem."
            </p>
+
         </motion.div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 pb-20">

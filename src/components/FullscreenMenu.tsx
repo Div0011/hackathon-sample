@@ -25,11 +25,14 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
   }, [isOpen]);
 
   const navItems = [
-    { id: 'entry', label: 'HOME', desc: 'PORTAL EXIT', icon: <Home />, color: 'bg-[#e63946]' },
-    { id: 'dashboard', label: 'EVENTS', desc: 'APERTURE LOG', icon: <Calendar />, color: 'bg-primary' },
+    { id: 'entry', label: 'HOME', desc: 'PORTAL EXIT', icon: <Home />, color: 'bg-primary' },
+    { id: 'dashboard', label: 'EVENTS', desc: 'EVENTS HUB', icon: <Calendar />, color: 'bg-[#e63946]' },
+
     { id: 'profile-creation', label: 'PROFILE', desc: 'IDENTITY HUB', icon: <User />, color: 'bg-black' },
-    { id: 'recommendations', label: 'MATCHED', desc: 'NEURAL SYNC!', icon: <Zap />, color: 'bg-[#ffb703]' },
-    { id: 'analytics', label: 'STATS', desc: 'VELOCITY MAP', icon: <BarChart2 />, color: 'bg-secondary' },
+    { id: 'recommendations', label: 'MATCHED', desc: 'CONNECTIONS', icon: <Zap />, color: 'bg-[#ffb703]' },
+
+    { id: 'analytics', label: 'STATS', desc: 'INSIGHTS', icon: <BarChart2 />, color: 'bg-secondary' },
+
     { id: 'policy', label: 'RULES', desc: 'PROTOCOL O7', icon: <Shield />, color: 'bg-[#219ebc]' },
   ];
 
@@ -90,7 +93,8 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
                   animate={{ opacity: 1, y: 0 }}
                   className="text-center mb-8 md:mb-12"
                 >
-                   <h3 className="text-primary font-black text-lg md:text-xl tracking-[0.3em] md:tracking-[0.5em] mb-2 md:mb-4">COMMAND CENTRE //</h3>
+                   <h3 className="text-primary font-black text-lg md:text-xl tracking-[0.3em] md:tracking-[0.5em] mb-2 md:mb-4">NAVIGATION //</h3>
+
                    <h2 className="text-4xl md:text-8xl font-black italic tracking-tighter text-stroke">SELECT DESTINATION!</h2>
                 </motion.div>
 
@@ -141,7 +145,8 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
                      className="group flex items-center gap-4 px-8 py-4 bg-black text-white border-4 border-black shadow-[6px_6px_0px_#000] hover:shadow-[10px_10px_0px_#000] transition-all"
                    >
                       <LogOut size={24} className="group-hover:rotate-12 transition-transform" />
-                      <span className="font-black italic text-xl tracking-widest">LOGOUT SYNC!</span>
+                      <span className="font-black italic text-xl tracking-widest">LOGOUT!</span>
+
                    </motion.button>
 
                    <motion.button
@@ -152,7 +157,8 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
                          <X size={24} className="md:w-10 md:h-10" strokeWidth={4} />
                       </div>
                       <div className="absolute top-1/2 left-full ml-4 md:ml-6 translate-y-[-50%] px-4 py-2 border-2 border-black font-black text-[8px] md:text-[10px] tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all bg-white">
-                         CLOSE COMMAND
+                         CLOSE MENU
+
                       </div>
                    </motion.button>
                 </div>

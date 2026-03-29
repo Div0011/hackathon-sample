@@ -34,13 +34,15 @@ export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () 
            animate={{ x: 0, opacity: 1 }}
            className="text-5xl md:text-9xl font-black italic tracking-tighter text-stroke mb-12 md:mb-20 lowercase"
         >
-           neural <span className="bg-[#ffb703] not-italic px-4 md:px-6 text-black">analytics//</span>
+           platform <span className="bg-[#ffb703] not-italic px-4 md:px-6 text-black">analytics//</span>
+
         </motion.h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {/* Line Chart */}
           <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[10px_10px_0px_#000] md:shadow-[15px_15px_0px_#000] h-[350px] md:h-[450px]">
-            <h3 className="text-lg md:text-xl font-black mb-6 md:mb-8 italic border-b-4 border-black pb-4 uppercase">User Velocity //</h3>
+            <h3 className="text-lg md:text-xl font-black mb-6 md:mb-8 italic border-b-4 border-black pb-4 uppercase">User Growth //</h3>
+
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -56,7 +58,8 @@ export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () 
 
           {/* Bar Chart */}
           <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[10px_10px_0px_#000] md:shadow-[15px_15px_0px_#000] h-[350px] md:h-[450px]">
-            <h3 className="text-lg md:text-xl font-black mb-6 md:mb-8 italic border-b-4 border-black pb-4 uppercase">Sync Density //</h3>
+            <h3 className="text-lg md:text-xl font-black mb-6 md:mb-8 italic border-b-4 border-black pb-4 uppercase">Event Density //</h3>
+
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -71,7 +74,8 @@ export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () 
           <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[15px_15px_0px_#000] md:shadow-[20px_20px_0px_#000] h-[400px] md:h-[500px] col-span-1 lg:col-span-2">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-10 gap-4">
                <h3 className="text-lg md:text-xl font-black italic border-b-4 border-black pb-4 uppercase">Cluster Distribution //</h3>
-               <div className="bg-black text-white px-3 md:px-4 py-1 text-[10px] md:text-xs font-black">MODE: VINTAGE_SCAN</div>
+               <div className="bg-black text-white px-3 md:px-4 py-1 text-[10px] md:text-xs font-black">MODE: GLOBAL_VIEW</div>
+
             </div>
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart>

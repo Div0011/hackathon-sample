@@ -22,7 +22,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
       >
         {/* Comic Sticker */}
         <div className="absolute -top-8 -right-8 bg-[#ffb703] border-4 border-black px-6 py-2 font-black text-xl rotate-[15deg] shadow-[8px_8px_0px_#000] z-20">
-           {isRegister ? 'JOIN CLUSTER!' : 'SYNC BACK!'}
+           {isRegister ? 'JOIN NOW!' : 'WELCOME BACK!'}
+
         </div>
 
         <div className="bg-white border-4 md:border-8 border-black p-8 md:p-12 shadow-[15px_15px_0px_#000] md:shadow-[30px_30px_0px_#000]">
@@ -31,25 +32,29 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                  <Fingerprint size={40} />
               </div>
               <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter text-stroke leading-none uppercase">
-                 {isRegister ? 'IDENTITY GATE//' : 'ACCESS PORTAL//'}
+                 {isRegister ? 'SIGN UP//' : 'LOGIN//'}
+
               </h1>
            </div>
 
            <div className="space-y-8">
               <div className="space-y-3">
-                 <label className="text-xs font-black uppercase tracking-[0.4em] opacity-40 ml-1">// BIOLOGICAL MAIL</label>
+                 <label className="text-xs font-black uppercase tracking-[0.4em] opacity-40 ml-1">// EMAIL ADDRESS</label>
+
                  <div className="relative group">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity" />
                     <input 
                       type="email" 
                       className="w-full bg-white border-4 border-black p-5 pl-14 font-black text-xl outline-none focus:bg-[#feff9c] transition-all" 
-                      placeholder="neuron@scanect.io"
+                      placeholder="yourname@example.com"
+
                     />
                  </div>
               </div>
 
               <div className="space-y-3">
-                 <label className="text-xs font-black uppercase tracking-[0.4em] opacity-40 ml-1">// NEURAL KEY</label>
+                 <label className="text-xs font-black uppercase tracking-[0.4em] opacity-40 ml-1">// PASSWORD</label>
+
                  <div className="relative group">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity" />
                     <input 
@@ -64,7 +69,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 onClick={onLogin}
                 className="btn-premium w-full py-6 md:py-8 text-2xl md:text-3xl italic flex items-center justify-center gap-4 group"
               >
-                 {isRegister ? 'INITIALIZE BIOMETRICS!' : 'ESTABLISH SYNC!'}
+                 {isRegister ? 'CREATE ACCOUNT!' : 'LOG IN!'}
+
                  <ArrowRight className="group-hover:translate-x-2 transition-transform" />
               </button>
 
@@ -84,7 +90,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               </div>
 
               <p className="text-center font-black mt-8 md:mt-10 lowercase italic opacity-60">
-                 {isRegister ? 'Already part of a cluster?' : 'First time in the dreamscape?'} 
+                 {isRegister ? 'Already part of the network?' : 'First time on the platform?'} 
+ 
                  <span 
                    onClick={() => setIsRegister(!isRegister)}
                    className="text-primary cursor-pointer underline ml-2 not-italic uppercase"
