@@ -44,7 +44,8 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
     dreamRole: '',
     // Step 7
     problemsToSolve: '',
-    valueToOffer: ''
+    valueToOffer: '',
+    mbtiTrait: ''
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -476,18 +477,36 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 px-4">
                    <div className="space-y-12">
                       <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// AVAILABILITY</label>
+                         <div className="flex justify-between items-center">
+                           <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// MBTI TRAIT</label>
+                           <a href="https://www.16personalities.com/personality-types" target="_blank" rel="noopener noreferrer" className="text-xs text-[#185FA5] underline font-bold italic">FIND YOUR TYPE</a>
+                         </div>
 
                          <div className="space-y-4">
-                            {['High (10+ hrs/wk)', 'Medium (5-10 hrs/wk)', 'Low (<5 hrs/wk)'].map(lvl => (
-                              <button
-                                key={lvl}
-                                onClick={() => setFormData({...formData, availability: lvl})}
-                                className={`w-full p-4 border-4 border-black text-left font-black text-xl transition-all ${formData.availability === lvl ? 'bg-[#185FA5] text-white shadow-[8px_8px_0px_#000]' : 'bg-white shadow-[4px_4px_0px_#000]'}`}
-                              >
-                                {lvl}
-                              </button>
-                            ))}
+                            <select 
+                               title="MBTI Trait selection"
+                               className="w-full bg-white border-4 border-black p-6 font-black text-lg md:text-2xl"
+                               value={formData.mbtiTrait}
+                               onChange={e => setFormData({...formData, mbtiTrait: e.target.value})}
+                            >
+                               <option value="">Select MBTI</option>
+                               <option value="INTJ">INTJ (Architect)</option>
+                               <option value="INTP">INTP (Logician)</option>
+                               <option value="ENTJ">ENTJ (Commander)</option>
+                               <option value="ENTP">ENTP (Debater)</option>
+                               <option value="INFJ">INFJ (Advocate)</option>
+                               <option value="INFP">INFP (Mediator)</option>
+                               <option value="ENFJ">ENFJ (Protagonist)</option>
+                               <option value="ENFP">ENFP (Campaigner)</option>
+                               <option value="ISTJ">ISTJ (Logistician)</option>
+                               <option value="ISFJ">ISFJ (Defender)</option>
+                               <option value="ESTJ">ESTJ (Executive)</option>
+                               <option value="ESFJ">ESFJ (Consul)</option>
+                               <option value="ISTP">ISTP (Virtuoso)</option>
+                               <option value="ISFP">ISFP (Adventurer)</option>
+                               <option value="ESTP">ESTP (Entrepreneur)</option>
+                               <option value="ESFP">ESFP (Entertainer)</option>
+                            </select>
                          </div>
                       </div>
                       <div className="space-y-6">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, MapPin, Zap, Star, Ticket } from 'lucide-react';
+import { useRole } from '../context/RoleContext';
 
 const events = [
   {
@@ -39,6 +40,7 @@ const events = [
 ];
 
 export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void }) => {
+  const { roles } = useRole();
   const [index, setIndex] = useState(0);
   const current = events[index];
 
@@ -164,12 +166,14 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
 
                </div>
                <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
-                  <button 
-                    onClick={() => onNavigate('event-creation')}
-                    className="bg-[#185FA5] text-white px-8 py-4 font-black text-xl md:text-3xl italic shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] hover:-translate-y-2 transition-all flex items-center gap-4 rotate-[-2deg]"
-                  >
-                    CREATE NEW EVENT <Ticket size={32} />
-                  </button>
+                  {(roles.isAdmin || roles.isOrganizer) && (
+                    <button 
+                      onClick={() => onNavigate('event-creation')}
+                      className="bg-[#185FA5] text-white px-8 py-4 font-black text-xl md:text-3xl italic shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] hover:-translate-y-2 transition-all flex items-center gap-4 rotate-[-2deg]"
+                    >
+                      CREATE NEW EVENT <Ticket size={32} />
+                    </button>
+                  )}
                   <div className="bg-black text-[#ffb703] px-6 py-3 font-black text-xl italic shadow-[8px_8px_0px_#000]">SCANECT v3</div>
 
                </div>

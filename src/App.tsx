@@ -15,6 +15,8 @@ import { LoginView } from './components/LoginView';
 import { WelcomeView } from './components/WelcomeView';
 import { EventRegistrationView } from './components/EventRegistrationView';
 import { EventCreationView } from './components/EventCreationView';
+import { RoleSelectionView } from './components/RoleSelectionView';
+import { SettingsView } from './components/SettingsView';
 
 
 import { NeuralBackground } from './components/NeuralBackground';
@@ -23,7 +25,7 @@ import { CustomCursor } from './components/CustomCursor';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type ViewState = 'entry' | 'login' | 'welcome' | 'dashboard' | 'register-event' | 'event-creation' | 'profile-creation' | 'recommendations' | 'analytics' | 'policy' | 'lounge';
+type ViewState = 'entry' | 'role-selection' | 'settings' | 'login' | 'welcome' | 'dashboard' | 'register-event' | 'event-creation' | 'profile-creation' | 'recommendations' | 'analytics' | 'policy' | 'lounge';
 
 
 
@@ -127,13 +129,15 @@ function App() {
             variants={pageVariants}
             className="w-full flex-1"
           >
-            {view === 'entry' && <EntryView onSelect={() => navigateTo('login')} />}
+            {view === 'entry' && <EntryView onSelect={() => navigateTo('role-selection')} />}
+            {view === 'role-selection' && <RoleSelectionView onBack={() => navigateTo('entry')} onNavigate={navigateTo} />}
+            {view === 'settings' && <SettingsView onNavigate={navigateTo} />}
             {view === 'login' && <LoginView onLogin={() => navigateTo('welcome')} />}
             {view === 'welcome' && <WelcomeView onSelectOption={(opt: any) => opt === 'take-part' ? navigateTo('dashboard') : navigateTo('register-event')} />}
             {view === 'dashboard' && <DashboardView onNavigate={(v: any) => navigateTo(v as any)} />}
             {view === 'register-event' && <EventRegistrationView onComplete={() => navigateTo('profile-creation')} />}
             {view === 'event-creation' && <EventCreationView onComplete={() => navigateTo('dashboard')} />}
-            {view === 'profile-creation' && <ProfileCreationView onNavigate={navigateTo} />}
+            {view === 'profile-creation' && <ProfileCreationView onNavigate={(v: any) => navigateTo(v === 'recommendations' ? 'login' : v)} />}
 
             {view === 'recommendations' && <UserRecommendationView onNavigate={navigateTo} />}
 

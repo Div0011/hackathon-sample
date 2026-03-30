@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Calendar, User, Zap, Shield, BarChart2, LogOut, ArrowLeft } from 'lucide-react';
+import { X, Home, Calendar, User, Zap, Shield, BarChart2, LogOut, ArrowLeft, Settings } from 'lucide-react';
+import { useRole } from '../context/RoleContext';
 
 interface FullscreenMenuProps {
   currentView: string;
@@ -10,6 +11,7 @@ interface FullscreenMenuProps {
 export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onNavigate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isNear, setIsNear] = useState(false);
+  const { roles } = useRole();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -25,16 +27,14 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
   }, [isOpen]);
 
   const navItems = [
-    { id: 'entry', label: 'HOME', desc: 'PORTAL EXIT', icon: <Home />, color: 'bg-primary' },
-    { id: 'dashboard', label: 'EVENTS', desc: 'EVENTS HUB', icon: <Calendar />, color: 'bg-[#e63946]' },
-
-    { id: 'profile-creation', label: 'PROFILE', desc: 'IDENTITY HUB', icon: <User />, color: 'bg-black' },
-    { id: 'recommendations', label: 'MATCHED', desc: 'CONNECTIONS', icon: <Zap />, color: 'bg-[#ffb703]' },
-
-    { id: 'analytics', label: 'STATS', desc: 'INSIGHTS', icon: <BarChart2 />, color: 'bg-secondary' },
-
-    { id: 'policy', label: 'RULES', desc: 'PROTOCOL O7', icon: <Shield />, color: 'bg-[#219ebc]' },
-  ];
+    { id: 'entry', label: 'HOME', desc: 'PORTAL EXIT', icon: <Home />, color: 'bg-primary', show: true },
+    { id: 'dashboard', label: 'EVENTS', desc: 'EVENTS HUB', icon: <Calendar />, color: 'bg-[#e63946]', show: true },
+    { id: 'profile-creation', label: 'PROFILE', desc: 'IDENTITY HUB', icon: <User />, color: 'bg-black', show: true },
+    { id: 'recommendations', label: 'MATCHED', desc: 'CONNECTIONS', icon: <Zap />, color: 'bg-[#ffb703]', show: roles.isAdmin || roles.isVIP },
+    { id: 'analytics', label: 'STATS', desc: 'INSIGHTS', icon: <BarChart2 />, color: 'bg-secondary', show: roles.isAdmin || roles.isOrganizer },
+    { id: 'policy', label: 'RULES', desc: 'PROTOCOL O7', icon: <Shield />, color: 'bg-[#219ebc]', show: true },
+    { id: 'settings', label: 'SETTINGS', desc: 'ADMIN CONTROL', icon: <Settings />, color: 'bg-gray-800', show: roles.isAdmin },
+  ].filter(item => item.show);
 
   return (
     <>
