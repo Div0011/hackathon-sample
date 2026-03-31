@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, ArrowRight, ArrowLeft, CheckCircle, Info, Link, Code, Globe, User, Star, MessageSquare, Target, Settings, Brain, Sparkles, Send } from 'lucide-react';
-
-
+import { Zap, ArrowRight, ArrowLeft, Globe, Brain, Lock } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface ProfileCreationViewProps {
-  onNavigate: (view: any) => void;
+  onComplete: () => void;
 }
 
-export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavigate }) => {
+export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComplete }) => {
+  const { registerUser } = useAuth();
   const [step, setStep] = useState(1);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [formData, setFormData] = useState({
     // Step 1
     fullName: '',
@@ -62,6 +63,9 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
       if (!formData.email) newErrors.email = 'Required';
       if (!formData.yearOfStudy) newErrors.yearOfStudy = 'Required';
       if (!formData.branch) newErrors.branch = 'Required';
+      if (!password) newErrors.password = 'Please set a password';
+      else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+      if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     } else if (currentStep === 2) {
       if (!formData.linkedin) newErrors.linkedin = 'LinkedIn URL is required';
     } else if (currentStep === 3) {
@@ -99,49 +103,10 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
 
   const handleSubmit = () => {
     if (validateStep(step)) {
-      setIsSubmitted(true);
+      registerUser(formData, password);
+      onComplete();
     }
   };
-
-  const handleSendPrompt = () => {
-    const prompt = 'My networking profile form is complete. Based on what I filled in, help me write a polished AI-generated profile bio I can use for networking.';
-    if ((window as any).sendPrompt) {
-      (window as any).sendPrompt(prompt);
-    } else {
-      console.log('Prompt:', prompt);
-    }
-    onNavigate('recommendations');
-  };
-
-  if (isSubmitted) {
-    return (
-      <section className="relative min-h-screen w-full pt-32 pb-20 px-6 md:px-12 bg-[#fffdf2] flex flex-col items-center justify-center overflow-hidden">
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="max-w-4xl w-full text-center relative z-10"
-        >
-          <div className="w-24 h-24 md:w-32 md:h-32 bg-primary border-4 md:border-8 border-black flex items-center justify-center text-white mx-auto shadow-[10px_10px_0px_#000] md:shadow-[20px_20px_0px_#000] mb-12 rotate-[-5deg]">
-             <CheckCircle size={60} strokeWidth={3} />
-          </div>
-          <h1 className="text-5xl md:text-[8rem] font-black italic tracking-tighter text-stroke leading-none uppercase mb-8">PROFILE <span className="bg-black text-[#185FA5] not-italic px-4">CREATED!</span></h1>
-
-          <p className="text-xl md:text-2xl font-black italic lowercase max-w-2xl mx-auto border-y-4 md:border-y-8 border-black py-6 md:py-10 mb-16 md:mb-24 scale-x-110">
-             "your profile is now active. you can now generate your networking bio."
-          </p>
-
-
-          <button 
-            onClick={handleSendPrompt}
-            className="btn-premium px-12 py-6 text-2xl md:text-4xl shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] transition-all flex items-center gap-4 mx-auto font-black italic"
-          >
-            Generate my profile bio
-            <Send size={32} />
-          </button>
-        </motion.div>
-      </section>
-    );
-  }
 
   return (
     <section className="relative min-h-screen w-full pt-20 md:pt-48 pb-16 md:pb-32 px-6 md:px-12 bg-[#fffdf2] overflow-x-hidden">
@@ -191,7 +156,6 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                       onChange={e => setFormData({...formData, fullName: e.target.value})}
                       className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
                       placeholder="e.g. Alex Smith" 
-
                     />
                     {errors.fullName && <p className="text-primary font-black italic lowercase text-xs">!! {errors.fullName}</p>}
                   </div>
@@ -203,7 +167,6 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                       onChange={e => setFormData({...formData, email: e.target.value})}
                       className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
                       placeholder="alex@example.com" 
-
                     />
                     {errors.email && <p className="text-primary font-black italic lowercase text-xs">!! {errors.email}</p>}
                   </div>
@@ -215,7 +178,6 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                       onChange={e => setFormData({...formData, yearOfStudy: e.target.value})}
                       className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none"
                     >
-
                       <option value="">Select Year</option>
                       <option>1st Year</option>
                       <option>2nd Year</option>
@@ -235,6 +197,43 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                       placeholder="e.g. Computer Science" 
                     />
                     {errors.branch && <p className="text-primary font-black italic lowercase text-xs">!! {errors.branch}</p>}
+                  </div>
+
+                  {/* Password Fields – spanning full width */}
+                  <div className="md:col-span-2 border-t-4 border-black pt-8 mt-2">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-10 h-10 bg-black flex items-center justify-center text-white shrink-0">
+                        <Lock size={20} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-black uppercase tracking-widest">Set Your Login Password</p>
+                        <p className="text-[10px] font-black lowercase italic opacity-50">remember this — you'll use it with your unique ID to log in next time.</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-3">
+                        <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// PASSWORD</label>
+                        <input 
+                          type="password"
+                          value={password}
+                          onChange={e => setPassword(e.target.value)}
+                          className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10"
+                          placeholder="min. 6 characters"
+                        />
+                        {errors.password && <p className="text-primary font-black italic lowercase text-xs">!! {errors.password}</p>}
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// CONFIRM PASSWORD</label>
+                        <input 
+                          type="password"
+                          value={confirmPassword}
+                          onChange={e => setConfirmPassword(e.target.value)}
+                          className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10"
+                          placeholder="repeat password"
+                        />
+                        {errors.confirmPassword && <p className="text-primary font-black italic lowercase text-xs">!! {errors.confirmPassword}</p>}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -510,13 +509,13 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                          </div>
                       </div>
                       <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// PERSONALITY TYPE</label>
-                         <div className="space-y-4">
+                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// PERSONALITY TYPE</label>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {['Analyst', 'Diplomat', 'Sentinel', 'Explorer'].map(type => (
                               <button
                                 key={type}
                                 onClick={() => setFormData({...formData, personalityType: type})}
-                                className={`w-full p-4 border-4 border-black text-left font-black text-xl transition-all ${formData.personalityType === type ? 'bg-secondary text-black shadow-[8px_8px_0px_#000]' : 'bg-white shadow-[4px_4px_0px_#000]'}`}
+                                className={`w-full p-4 border-4 border-black text-left font-black text-lg md:text-xl transition-all ${formData.personalityType === type ? 'bg-secondary text-black shadow-[8px_8px_0px_#000]' : 'bg-white shadow-[4px_4px_0px_#000]'}`}
                               >
                                 {type}
                               </button>
@@ -527,7 +526,7 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
 
                    <div className="space-y-12">
                       <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// OPEN-TO OPPORTUNITIES</label>
+                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// OPEN-TO OPPORTUNITIES</label>
                          <div className="grid grid-cols-2 gap-4">
                             {openToList.map(item => (
                               <button
@@ -541,7 +540,7 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                          </div>
                       </div>
                       <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// DREAM ROLE</label>
+                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-primary">// DREAM ROLE</label>
                          <input 
                            type="text" 
                            value={formData.dreamRole}
@@ -566,7 +565,7 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                    </div>
                    <div className="grid grid-cols-1 gap-12">
                       <div className="space-y-3">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// PROBLEMS YOU WANT TO SOLVE</label>
+                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-primary">// PROBLEMS YOU WANT TO SOLVE</label>
                          <textarea 
                            className="w-full bg-white border-4 border-black p-8 md:p-12 h-56 md:h-72 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10 transition-all resize-none" 
                            placeholder="What problems or challenges are you looking to solve?"
@@ -577,7 +576,7 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onNavi
                          {errors.problemsToSolve && <p className="text-primary font-black italic lowercase text-xs">!! {errors.problemsToSolve}</p>}
                       </div>
                       <div className="space-y-3">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// VALUE YOU CAN OFFER OTHERS</label>
+                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// VALUE YOU CAN OFFER OTHERS</label>
                          <textarea 
                            className="w-full bg-white border-4 border-black p-8 md:p-12 h-56 md:h-72 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10 transition-all resize-none" 
                            placeholder="What value or skills can you offer to others?"

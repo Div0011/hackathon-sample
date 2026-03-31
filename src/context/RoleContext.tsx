@@ -1,29 +1,29 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useAuth, UserRole } from './AuthContext';
 
 interface RoleState {
   isAdmin: boolean;
   isOrganizer: boolean;
-  isVIP: boolean;
+  role: UserRole | null;
 }
 
 interface RoleContextType {
   roles: RoleState;
-  setRoles: React.Dispatch<React.SetStateAction<RoleState>>;
 }
-
-const defaultState: RoleState = {
-  isAdmin: true, // Default Admin access ON per user request
-  isOrganizer: false,
-  isVIP: false,
-};
 
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [roles, setRoles] = useState<RoleState>(defaultState);
+  const { currentUser } = useAuth();
+
+  const roles: RoleState = {
+    isAdmin: currentUser?.role === 'admin',
+    isOrganizer: currentUser?.role === 'organiser',
+    role: currentUser?.role ?? null,
+  };
 
   return (
-    <RoleContext.Provider value={{ roles, setRoles }}>
+    <RoleContext.Provider value={{ roles }}>
       {children}
     </RoleContext.Provider>
   );
@@ -31,8 +31,6 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useRole = () => {
   const context = useContext(RoleContext);
-  if (!context) {
-    throw new Error('useRole must be used within a RoleProvider');
-  }
+  if (!context) throw new Error('useRole must be used within a RoleProvider');
   return context;
 };

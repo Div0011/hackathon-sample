@@ -28,6 +28,11 @@
     --comic-border: 2px;
     --comic-border-lg: 4px;
   }
+  @media (max-width: 380px) {
+    --comic-shadow: 6px 6px 0px #000;
+    --comic-border: 1.5px;
+    --comic-border-lg: 3px;
+  }
 }
 
 @media (min-width: 1024px) {

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, MapPin, Zap, Star, Ticket } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MapPin, Zap, Star, Ticket, PlusCircle, ArrowRight as ArrowRightIcon } from 'lucide-react';
 import { useRole } from '../context/RoleContext';
+import { useAuth } from '../context/AuthContext';
 
 const events = [
   {
@@ -41,6 +42,7 @@ const events = [
 
 export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void }) => {
   const { roles } = useRole();
+  const { currentUser } = useAuth();
   const [index, setIndex] = useState(0);
   const current = events[index];
 
@@ -51,11 +53,11 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
     <section className="relative min-h-screen w-full bg-[#fffdf2] flex flex-col font-display uppercase overflow-hidden">
       
       {/* SHUTTER BARS (Cinematic Letterboxing) */}
-      <div className="absolute top-0 inset-x-0 h-16 md:h-24 bg-black z-30 pointer-events-none flex items-end justify-center pb-4 md:pb-6">
+      <div className="absolute top-0 inset-x-0 h-10 md:h-24 bg-black z-30 pointer-events-none flex items-end justify-center pb-2 md:pb-6">
          <span className="text-white text-[8px] md:text-[10px] font-black tracking-[1em] opacity-40 italic">EVENT DASHBOARD // ALPHA</span>
 
       </div>
-      <div className="absolute bottom-0 inset-x-0 h-16 md:h-24 bg-black z-30 pointer-events-none flex items-start justify-center pt-4 md:pt-6">
+      <div className="absolute bottom-0 inset-x-0 h-10 md:h-24 bg-black z-30 pointer-events-none flex items-start justify-center pt-2 md:pt-6">
          <span className="text-white text-[8px] md:text-[10px] font-black tracking-[1em] opacity-40 italic">UPCOMING OPPORTUNITIES</span>
 
       </div>
@@ -160,7 +162,7 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
          <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                <div>
-                  <h2 className="text-4xl md:text-8xl font-black italic tracking-tighter text-stroke leading-none uppercase">UPCOMING <span className="bg-primary text-white not-italic px-4">EVENTS//</span></h2>
+                  <h2 className="text-3xl sm:text-5xl md:text-7xl font-black italic tracking-tighter text-stroke leading-none uppercase">UPCOMING <span className="bg-primary text-white not-italic px-4">EVENTS//</span></h2>
 
                   <p className="text-lg md:text-2xl font-black mt-6 md:mt-8 italic opacity-60 lowercase max-w-xl border-l-8 border-black pl-8">"register for the networking events in the high-performance pipeline."</p>
 
@@ -169,7 +171,7 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
                   {(roles.isAdmin || roles.isOrganizer) && (
                     <button 
                       onClick={() => onNavigate('event-creation')}
-                      className="bg-[#185FA5] text-white px-8 py-4 font-black text-xl md:text-3xl italic shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] hover:-translate-y-2 transition-all flex items-center gap-4 rotate-[-2deg]"
+                      className="bg-[#185FA5] text-white px-6 md:px-8 py-3 md:py-4 font-black text-lg sm:text-2xl md:text-3xl italic shadow-[6px_6px_0px_#000] md:shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] hover:-translate-y-2 transition-all flex items-center gap-3 md:gap-4 rotate-[-2deg]"
                     >
                       CREATE NEW EVENT <Ticket size={32} />
                     </button>
@@ -203,8 +205,37 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
                      </button>
                   </motion.div>
                ))}
-            </div>
-         </div>
+          </div>
+
+          {/* Organiser Registration Banner – shown to normal users only */}
+          {!roles.isAdmin && !roles.isOrganizer && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-16 bg-[#ffb703] border-4 border-black p-8 shadow-[12px_12px_0px_#000] flex flex-col md:flex-row items-start md:items-center justify-between gap-8"
+            >
+              <div>
+                <div className="inline-block bg-black text-[#ffb703] border-2 border-black px-4 py-1 font-black text-[8px] tracking-widest uppercase mb-4">
+                  FOR ORGANISERS
+                </div>
+                <h3 className="text-3xl md:text-5xl font-black italic uppercase leading-none mb-3 text-stroke">
+                  WANT TO HOST AN EVENT?
+                </h3>
+                <p className="font-black italic lowercase opacity-70 text-base max-w-xl">
+                  "register as an event organiser to create events, access analytics, and manage participants on scanect."
+                </p>
+              </div>
+              <button
+                onClick={() => onNavigate('organiser-register')}
+                className="shrink-0 bg-black text-[#ffb703] border-4 border-black px-8 py-5 font-black text-xl italic hover:bg-white hover:text-black transition-all shadow-[8px_8px_0px_#000] flex items-center gap-3 group"
+              >
+                REGISTER AS ORGANISER
+                <PlusCircle size={22} className="group-hover:rotate-90 transition-transform" />
+              </button>
+            </motion.div>
+          )}
+        </div>
       </div>
     </section>
   );
