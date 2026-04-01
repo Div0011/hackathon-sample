@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, ArrowRight, ArrowLeft, CheckCircle, Info, Sparkles, User, Database, MessageSquare, Target } from 'lucide-react';
+import { Zap, ArrowRight, ArrowLeft, CheckCircle, Info, Sparkles, User, Database, Target, Mail, BadgeCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface EventRegistrationViewProps {
+  event: {
+    id: string;
+    name: string;
+    location: string;
+    tag: string;
+    color: string;
+    desc: string;
+  };
   onComplete: () => void;
 }
 
-export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ onComplete }) => {
+export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ event, onComplete }) => {
+  const { currentUser } = useAuth();
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [mode, setMode] = useState<'ai' | 'manual'>('ai');
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(true);
   
   const [formData, setFormData] = useState({
-    eventId: '',
-    userId: '',
+    eventId: event.id,
+    userId: currentUser?.uniqueId || '',
+    fullName: currentUser?.profile?.fullName || '',
+    email: currentUser?.registeredEmail || '',
     connectWith: '',
     whyAttend: '',
     useCase: ''
@@ -35,6 +47,8 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
     if (step === 1) {
       if (!formData.eventId) newErrors.eventId = 'Event ID is required';
       if (!formData.userId) newErrors.userId = 'User ID is required';
+      if (!formData.fullName) newErrors.fullName = 'Full Name is required';
+      if (!formData.email) newErrors.email = 'Email is required';
     } else if (step === 2) {
       if (!formData.connectWith) newErrors.connectWith = 'Please describe who you want to connect with';
       if (!formData.whyAttend) newErrors.whyAttend = 'Please describe why you want to attend';
@@ -71,7 +85,6 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
     { id: 'collaborator', title: 'Project Collaborator', desc: 'Find teammates for your ongoing builds and projects.' },
     { id: 'seeker', title: 'Knowledge Seeker', desc: 'Connect with seniors, domain experts, and industry leaders.' },
     { id: 'hunter', title: 'Opportunity Hunter', desc: 'Find internships, freelance, or startup leads at the event.' }
-
   ];
 
   const chips = ['Project Collaborator', 'Knowledge Seeker', 'Opportunity Hunter', 'Mentor', 'Mentee', 'Hackathon Teammate', 'Startup Co-founder', 'Just Exploring'];
@@ -87,17 +100,16 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
           <div className="w-24 h-24 md:w-32 md:h-32 bg-primary border-4 md:border-8 border-black flex items-center justify-center text-white mx-auto shadow-[10px_10px_0px_#000] md:shadow-[20px_20px_0px_#000] mb-12 rotate-[-5deg]">
              <CheckCircle size={60} strokeWidth={3} />
           </div>
-          <h1 className="text-5xl md:text-[8rem] font-black italic tracking-tighter text-stroke leading-none uppercase mb-8">YOU'RE <span className="bg-black text-[#185FA5] not-italic px-4">REGISTERED!</span></h1>
+          <h1 className="text-5xl md:text-[8rem] font-black italic tracking-tighter text-stroke leading-none uppercase mb-8">CONFIRMED <span className="bg-black text-[#185FA5] not-italic px-4">JOINED!</span></h1>
           <p className="text-xl md:text-2xl font-black italic lowercase max-w-2xl mx-auto border-y-4 md:border-y-8 border-black py-6 md:py-10 mb-16 md:mb-24 scale-x-110">
-             "you are now registered. our ai will now match you with other attendees."
+             "your registration is locked. the event ticket will be shared to you at {formData.email} in a few seconds."
           </p>
 
-
           <button 
-            onClick={handleSendPrompt}
+            onClick={onComplete}
             className="btn-premium px-12 py-6 text-2xl md:text-4xl shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#000] transition-all flex items-center gap-4 mx-auto"
           >
-            Show my matches ↗️
+            GET MY EVENT PASS ↗️
           </button>
         </motion.div>
       </section>
@@ -113,7 +125,6 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
           <div className="flex justify-between items-end mb-4 font-black italic text-xs md:text-lg uppercase">
             <span>Step {step} of 3</span>
             <span className="text-primary">{Math.round((step/3)*100)}% Complete</span>
-
           </div>
           <div className="h-4 md:h-8 w-full bg-white border-2 md:border-4 border-black shadow-[4px_4px_0px_#000]">
             <motion.div 
@@ -127,13 +138,14 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
 
         <header className="mb-12 md:mb-16 text-center md:text-left">
            <div className="flex items-center gap-4 mb-4 justify-center md:justify-start">
-              <span className="bg-[#185FA5] text-white px-4 py-1 font-black text-xs tracking-widest uppercase rotate-[-2deg]">Event Registration</span>
+              <span className="bg-[#185FA5] text-white px-4 py-1 font-black text-xs tracking-widest uppercase rotate-[-2deg]">Event Hub</span>
+              <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">// JOINING: {event.name}</span>
            </div>
            <h1 className="text-4xl md:text-8xl font-black italic tracking-tighter text-stroke leading-none uppercase mb-4">
-              Let's get you in.
+              {step === 1 ? 'Verify Your Info' : step === 2 ? 'Networking Intent' : 'Neural Matching'}
            </h1>
            <p className="text-lg md:text-2xl font-bold italic opacity-40 lowercase">
-              "synchronizing your biological signature with the event cluster."
+              "we've auto-filled what we know about you. just confirm and head to the next step."
            </p>
         </header>
 
@@ -149,43 +161,69 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
             >
               {step === 1 && (
                 <div className="space-y-10">
-                  <div className="bg-surface-low border-2 md:border-4 border-black p-6 flex items-start gap-4 shadow-[5px_5px_0px_#000]">
-                    <Info className="text-[#185FA5] shrink-0" size={32} />
-                    <p className="text-sm md:text-lg font-black lowercase opacity-70 italic">
-                      "these ids link your registration to your networking profile and the correct event."
+                  <div className="bg-[#feff9c] border-2 md:border-4 border-black p-6 flex items-start gap-4 shadow-[5px_5px_0px_#000] rotate-[-1deg]">
+                    <BadgeCheck className="text-black shrink-0" size={32} />
+                    <p className="text-sm md:text-lg font-black lowercase opacity-70 italic leading-tight">
+                      "scanect has recognized you. please verify these details to link your ticket."
                     </p>
-
                   </div>
                   
-                  <div className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// EVENT ID</label>
+                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// YOUR UNIQUE ID</label>
                       <div className="relative">
                         <Database className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" />
                         <input 
                           type="text" 
-                          value={formData.eventId}
-                          onChange={e => setFormData({...formData, eventId: e.target.value})}
-                          className="w-full bg-white border-2 md:border-4 border-black p-4 pl-12 md:p-6 md:pl-16 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
-                          placeholder="Enter the event code shared by your organiser" 
+                          value={formData.userId}
+                          readOnly
+                          className="w-full bg-surface-low border-2 md:border-4 border-black p-4 pl-12 md:p-6 md:pl-16 font-black text-lg md:text-2xl outline-none opacity-60" 
+                          placeholder="Your ID" 
                         />
                       </div>
-                      {errors.eventId && <p className="text-primary font-black italic lowercase text-sm">!! {errors.eventId}</p>}
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// USER ID</label>
+                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// EVENT ID</label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" />
                         <input 
                           type="text" 
-                          value={formData.userId}
-                          onChange={e => setFormData({...formData, userId: e.target.value})}
-                          className="w-full bg-white border-2 md:border-4 border-black p-4 pl-12 md:p-6 md:pl-16 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
-                          placeholder="Your profile ID or registered email" 
+                          value={formData.eventId}
+                          readOnly
+                          className="w-full bg-surface-low border-2 md:border-4 border-black p-4 pl-12 md:p-6 md:pl-16 font-black text-lg md:text-2xl outline-none opacity-60" 
+                          placeholder="Event ID" 
                         />
                       </div>
-                      {errors.userId && <p className="text-primary font-black italic lowercase text-sm">!! {errors.userId}</p>}
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// FULL NAME</label>
+                      <div className="relative">
+                        <input 
+                          type="text" 
+                          value={formData.fullName}
+                          onChange={e => setFormData({...formData, fullName: e.target.value})}
+                          className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                          placeholder="Enter your name" 
+                        />
+                      </div>
+                      {errors.fullName && <p className="text-primary font-black italic lowercase text-sm">!! {errors.fullName}</p>}
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// EMAIL FOR TICKET</label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" />
+                        <input 
+                          type="email" 
+                          value={formData.email}
+                          onChange={e => setFormData({...formData, email: e.target.value})}
+                          className="w-full bg-white border-2 md:border-4 border-black p-4 pl-12 md:p-6 md:pl-16 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                          placeholder="your@email.com" 
+                        />
+                      </div>
+                      {errors.email && <p className="text-primary font-black italic lowercase text-sm">!! {errors.email}</p>}
                     </div>
                   </div>
                 </div>
@@ -198,7 +236,6 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
                     <p className="text-sm md:text-lg font-black lowercase opacity-70 italic">
                       "your answers help our ai connect you with the most relevant attendees at the event."
                     </p>
-
                   </div>
 
                   <div className="space-y-8">
@@ -229,7 +266,6 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
 
               {step === 3 && (
                 <div className="space-y-8">
-                  {/* Toggle Bar */}
                   <div className="flex justify-center p-2 bg-white border-4 border-black max-w-md mx-auto rounded-full shadow-[5px_5px_0px_#000]">
                     <button 
                       onClick={() => setMode('ai')}
@@ -253,7 +289,6 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
                             <Sparkles size={48} />
                           </div>
                           <h3 className="text-3xl md:text-5xl font-black italic text-stroke uppercase mb-4">AI Is Matching...</h3>
-
                           <div className="w-full max-w-sm mx-auto h-4 bg-surface-low border-2 border-black overflow-hidden mt-8">
                              <motion.div 
                                className="h-full bg-[#185FA5]"
@@ -301,7 +336,6 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation */}
           <div className="flex flex-col md:flex-row gap-6 mt-16 md:mt-24">
             {step > 1 && (
               <button 
@@ -317,7 +351,7 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
                 onClick={nextStep}
                 className="btn-premium flex-1 py-5 md:py-8 text-xl md:text-3xl flex items-center justify-center gap-4 group"
               >
-                CONTINUE
+                VERIFY & CONTINUE
                 <ArrowRight className="group-hover:translate-x-2 transition-transform" strokeWidth={4} />
               </button>
             ) : (
@@ -325,12 +359,11 @@ export const EventRegistrationView: React.FC<EventRegistrationViewProps> = ({ on
                 onClick={handleSubmit}
                 className="btn-premium flex-1 py-5 md:py-8 text-xl md:text-3xl flex items-center justify-center gap-4 group"
               >
-                REGISTER FOR EVENT →
+                GENERATE TICKET →
               </button>
             )}
           </div>
         </div>
-
       </div>
     </section>
   );

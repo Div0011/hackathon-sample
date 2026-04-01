@@ -131,7 +131,7 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
             </motion.button>
 
             {/* Current User UID Badge */}
-            {currentUser && (
+            {currentUser ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -142,6 +142,16 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
                   {currentUser.uniqueId} · {currentUser.role.toUpperCase()}
                 </span>
               </motion.div>
+            ) : (
+              <motion.button
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                onClick={() => onNavigate('login' as ViewState)}
+                className="pointer-events-auto hidden md:flex items-center gap-3 bg-[#e63946] text-white border-4 border-black px-6 py-2 shadow-[4px_4px_0px_#000] hover:shadow-[8px_8px_0px_#000] transition-all group"
+              >
+                <Zap size={16} className="group-hover:rotate-12 transition-transform" />
+                <span className="font-black text-[10px] tracking-[0.2em] uppercase">LOGIN // JOIN SCANECT</span>
+              </motion.button>
             )}
 
             {/* Menu Toggle */}
@@ -230,14 +240,16 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
 
               {/* Footer Actions */}
               <div className="mt-8 md:mt-10 flex flex-col md:flex-row items-center gap-6 md:gap-10">
-                <motion.button
-                  onClick={() => { navigate('entry'); onLogout(); }}
-                  whileHover={{ x: 5 }}
-                  className="group flex items-center gap-4 px-8 py-4 bg-black text-white border-4 border-black shadow-[6px_6px_0px_#000] hover:shadow-[10px_10px_0px_#000] transition-all"
-                >
-                  <LogOut size={24} className="group-hover:rotate-12 transition-transform" />
-                  <span className="font-black italic text-xl tracking-widest">LOGOUT!</span>
-                </motion.button>
+                {currentUser && (
+                  <motion.button
+                    onClick={() => { navigate('entry'); onLogout(); }}
+                    whileHover={{ x: 5 }}
+                    className="group flex items-center gap-4 px-8 py-4 bg-black text-white border-4 border-black shadow-[6px_6px_0px_#000] hover:shadow-[10px_10px_0px_#000] transition-all"
+                  >
+                    <LogOut size={24} className="group-hover:rotate-12 transition-transform" />
+                    <span className="font-black italic text-xl tracking-widest">LOGOUT!</span>
+                  </motion.button>
+                )}
 
                 <motion.button
                   onClick={() => setIsOpen(false)}

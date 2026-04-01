@@ -15,7 +15,10 @@ import { TheLounge } from './components/TheLounge';
 import { LoginView } from './components/LoginView';
 import { EventCreationView } from './components/EventCreationView';
 import { OrganiserRegistrationView } from './components/OrganiserRegistrationView';
+import { EventRegistrationView } from './components/EventRegistrationView';
 import { SettingsView } from './components/SettingsView';
+import { EventPassView } from './components/EventPassView';
+
 
 import { NeuralBackground } from './components/NeuralBackground';
 import { FullscreenMenu } from './components/FullscreenMenu';
@@ -37,13 +40,18 @@ export type ViewState =
   | 'event-creation'
   | 'organiser-register'
   | 'settings'
+  | 'event-pass'
+  | 'event-registration'
   | 'lounge';
+
 
 function App() {
   const { currentUser, logout } = useAuth();
   const { roles } = useRole();
   const [view, setView] = useState<ViewState>('entry');
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const lenisRef = useRef<Lenis | null>(null);
+
 
   const navigateTo = (newView: ViewState) => {
     if (newView !== view) {
@@ -155,16 +163,30 @@ function App() {
             )}
             {view === 'login' && (
               <LoginView
+                eventName={selectedEvent?.name}
                 onLoginSuccess={(role) => {
-                  // Always land on the profile page first, as per user request
-                  navigateTo('profile-display');
+                  if (selectedEvent) {
+                    navigateTo('event-registration');
+                  } else {
+                    navigateTo('profile-display');
+                  }
                 }}
-                onNewUser={() => navigateTo('profile-display')}
+                onNewUser={() => {
+                   navigateTo('profile-creation');
+                }}
               />
             )}
+
+
             {view === 'profile-creation' && (
               <ProfileCreationView
-                onComplete={() => navigateTo('profile-display')}
+                onComplete={() => {
+                  if (selectedEvent) {
+                    navigateTo('event-registration');
+                  } else {
+                    navigateTo('profile-display');
+                  }
+                }}
               />
             )}
             {view === 'profile-display' && (
@@ -174,9 +196,32 @@ function App() {
               />
             )}
             {view === 'dashboard' && (
-              <DashboardView onNavigate={(v: any) => navigateTo(v as any)} />
+              <DashboardView 
+                onNavigate={(v: any) => navigateTo(v as any)} 
+                onJoinEvent={(event: any) => {
+                  setSelectedEvent(event);
+                  if (currentUser) {
+                    navigateTo('event-registration');
+                  } else {
+                    navigateTo('login');
+                  }
+                }}
+              />
+            )}
+            {view === 'event-pass' && selectedEvent && (
+              <EventPassView 
+                event={selectedEvent} 
+                onBack={() => navigateTo('dashboard')} 
+              />
+            )}
+            {view === 'event-registration' && selectedEvent && (
+              <EventRegistrationView 
+                event={selectedEvent}
+                onComplete={() => navigateTo('event-pass')} 
+              />
             )}
             {view === 'recommendations' && (
+
               <UserRecommendationView onNavigate={navigateTo} />
             )}
             {view === 'analytics' && <AnalyticsDashboardView />}

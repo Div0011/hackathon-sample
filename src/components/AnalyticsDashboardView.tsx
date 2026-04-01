@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import { 
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   ScatterChart, Scatter, ZAxis, Cell
 } from 'recharts';
+import { Zap } from 'lucide-react';
 
 interface AnalyticsDashboardViewProps {
   onNavigate?: (view: any) => void;
@@ -26,6 +28,45 @@ const bubbleData = [
 ];
 
 export const AnalyticsDashboardView: React.FC<AnalyticsDashboardViewProps> = () => {
+  const { currentUser } = useAuth();
+  
+  if (!currentUser) {
+    return (
+      <section className="relative min-h-screen w-full flex items-center justify-center pt-32 pb-48 px-6 md:px-12 bg-[#fffdf2] overflow-hidden">
+        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:24px_24px]" />
+        
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="max-w-4xl w-full relative z-10 text-center"
+        >
+          <div className="bg-white border-4 md:border-8 border-black p-12 md:p-24 shadow-[20px_20px_0px_#000] md:shadow-[40px_40px_0px_#000] rotate-[-1deg]">
+            <div className="w-24 h-24 bg-secondary border-4 border-black flex items-center justify-center text-white mx-auto mb-10 shadow-[8px_8px_0px_#000] rotate-[5deg]">
+              <span className="font-black text-4xl leading-none">?</span>
+            </div>
+            
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black italic tracking-tighter text-stroke leading-none uppercase mb-8">
+              DATA<br />RESTRICTED//
+            </h1>
+            
+            <p className="font-black italic lowercase opacity-70 text-xl md:text-2xl mb-12 border-y-4 border-black py-8 max-w-2xl mx-auto">
+              "analytics and high-level platform insights are only accessible to verified accounts. please sync your identity to proceed."
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <button
+                onClick={() => window.location.href = '/'} 
+                className="btn-premium px-12 py-6 text-2xl italic flex items-center justify-center gap-4 shadow-[8px_8px_0px_#000]"
+              >
+                JOIN SCANECT <Zap size={24} />
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative min-h-screen w-full pt-24 md:pt-48 pb-20 md:pb-32 px-6 md:px-12 overflow-hidden bg-[#fffdf2]">
       <div className="max-w-7xl mx-auto relative z-10">

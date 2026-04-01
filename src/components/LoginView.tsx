@@ -6,21 +6,43 @@ import { useAuth, UserRole } from '../context/AuthContext';
 interface LoginViewProps {
   onLoginSuccess: (role: UserRole) => void;
   onNewUser: () => void;
+  eventName?: string;
 }
 
-export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onNewUser }) => {
-  const { login, currentUser } = useAuth();
+
+export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onNewUser, eventName }) => {
+
+  const { login, registerUser, currentUser } = useAuth();
 
   const [uniqueId, setUniqueId] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
   const [accessKey, setAccessKey] = useState('');
   const [showKeyField, setShowKeyField] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+
   const handleLogin = async () => {
     setError('');
+    
+    if (isRegistering) {
+      if (!fullName.trim()) { setError('Please enter your full name.'); return; }
+      if (!email.trim() || !email.includes('@')) { setError('Please enter a valid email.'); return; }
+      if (!password.trim() || password.length < 6) { setError('Password must be at least 6 characters.'); return; }
+
+      setIsLoading(true);
+      await new Promise(r => setTimeout(r, 800));
+      registerUser({ fullName: fullName.trim(), email: email.trim() }, password.trim());
+      setIsLoading(false);
+      onLoginSuccess('user');
+      return;
+    }
+
     if (!uniqueId.trim()) { setError('Please enter your Unique ID.'); return; }
+
     if (!password.trim()) { setError('Please enter your password.'); return; }
 
     setIsLoading(true);
@@ -99,27 +121,63 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onNewUser 
                 <LogIn size={28} />
               </div>
               <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-stroke leading-none uppercase">
-                LOGIN//
+                {eventName ? `JOIN ${eventName}` : isRegistering ? 'SIGN UP' : 'LOGIN'}//
               </h1>
+
+
             </div>
 
             <div className="space-y-6" onKeyDown={handleKeyDown}>
-              {/* Unique ID */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-1">
-                  // UNIQUE ID
-                </label>
-                <div className="relative group">
-                  <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity" size={20} />
-                  <input
-                    type="text"
-                    value={uniqueId}
-                    onChange={e => setUniqueId(e.target.value)}
-                    className="w-full bg-white border-4 border-black p-4 pl-12 font-black text-lg outline-none focus:bg-[#feff9c] transition-all"
-                    placeholder="e.g. SCN-USR-2847"
-                  />
-                </div>
-              </div>
+               {/* Conditional Inputs */}
+               {isRegistering ? (
+                 <>
+                   <div className="space-y-2">
+                     <label className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-1">
+                       // FULL NAME
+                     </label>
+                     <div className="relative group">
+                       <input
+                         type="text"
+                         value={fullName}
+                         onChange={e => setFullName(e.target.value)}
+                         className="w-full bg-white border-4 border-black p-4 font-black text-lg outline-none focus:bg-[#feff9c] transition-all"
+                         placeholder="e.g. John Doe"
+                       />
+                     </div>
+                   </div>
+                   <div className="space-y-2">
+                     <label className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-1">
+                       // EMAIL ADDRESS
+                     </label>
+                     <div className="relative group">
+                       <input
+                         type="email"
+                         value={email}
+                         onChange={e => setEmail(e.target.value)}
+                         className="w-full bg-white border-4 border-black p-4 font-black text-lg outline-none focus:bg-[#feff9c] transition-all"
+                         placeholder="e.g. john@example.com"
+                       />
+                     </div>
+                   </div>
+                 </>
+               ) : (
+                 <div className="space-y-2">
+                   <label className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-1">
+                     // UNIQUE ID
+                   </label>
+                   <div className="relative group">
+                     <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity" size={20} />
+                     <input
+                       type="text"
+                       value={uniqueId}
+                       onChange={e => setUniqueId(e.target.value)}
+                       className="w-full bg-white border-4 border-black p-4 pl-12 font-black text-lg outline-none focus:bg-[#feff9c] transition-all"
+                       placeholder="e.g. SCN-USR-2847"
+                     />
+                   </div>
+                 </div>
+               )}
+
 
               {/* Password */}
               <div className="space-y-2">
@@ -194,21 +252,31 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onNewUser 
                 )}
               </AnimatePresence>
 
-              {/* Submit */}
-              <button
-                onClick={handleLogin}
-                disabled={isLoading}
-                className="btn-premium w-full py-5 text-xl italic flex items-center justify-center gap-4 group disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <span className="animate-pulse">AUTHENTICATING...</span>
-                ) : (
-                  <>
-                    LOG IN!
-                    <ArrowRight className="group-hover:translate-x-2 transition-transform" size={22} />
-                  </>
-                )}
-              </button>
+               {/* Submit */}
+               <button
+                 onClick={handleLogin}
+                 disabled={isLoading}
+                 className="btn-premium w-full py-5 text-xl italic flex items-center justify-center gap-4 group disabled:opacity-50"
+               >
+                 {isLoading ? (
+                   <span className="animate-pulse">PROCESSING...</span>
+                 ) : (
+                   <>
+                     {isRegistering ? 'GET MY PASS!' : 'LOG IN!'}
+                     <ArrowRight className="group-hover:translate-x-2 transition-transform" size={22} />
+                   </>
+                 )}
+               </button>
+ 
+               <div className="text-center mt-4">
+                 <button 
+                   onClick={() => setIsRegistering(!isRegistering)}
+                   className="text-[10px] font-black uppercase tracking-[0.3em] hover:text-primary transition-colors underline decoration-2"
+                 >
+                   {isRegistering ? 'ALREADY HAVE AN ACCOUNT? LOGIN' : 'DON\'T HAVE AN ACCOUNT? QUICK SIGN UP'}
+                 </button>
+               </div>
+
             </div>
           </div>
         </motion.div>
@@ -234,15 +302,19 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onNewUser 
               </h2>
             </div>
             <p className="font-black lowercase italic opacity-70 mb-8 text-sm leading-tight">
-              "create your profile to join the network. you'll get a unique ID and password to log in from next time."
+              {eventName 
+                ? `"complete this step to get your pass for ${eventName}. no profile form needed, just your basic login details."`
+                : "create your profile to join the network. you'll get a unique ID and password to log in from next time."}
             </p>
+
             <button
               onClick={onNewUser}
               className="w-full bg-black text-[#ffb703] border-4 border-black py-4 font-black text-xl italic flex items-center justify-center gap-3 group hover:bg-white hover:text-black transition-all shadow-[6px_6px_0px_#000]"
             >
-              CREATE PROFILE
+              {eventName ? 'JOIN AS NEW USER' : 'CREATE PROFILE'}
               <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
             </button>
+
           </div>
 
           {/* Info box: what the access key is for */}

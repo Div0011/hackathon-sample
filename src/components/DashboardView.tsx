@@ -40,7 +40,8 @@ const events = [
   }
 ];
 
-export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void }) => {
+export const DashboardView = ({ onNavigate, onJoinEvent }: { onNavigate: (view: any) => void, onJoinEvent: (event: any) => void }) => {
+
   const { roles } = useRole();
   const { currentUser } = useAuth();
   const [index, setIndex] = useState(0);
@@ -128,13 +129,14 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
 
                <div className="flex flex-col gap-4 md:gap-6 w-full mt-auto">
                   <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full">
-                     <button 
-                       onClick={() => onNavigate('profile-creation')}
-                       className="flex-1 btn-premium py-5 md:py-8 text-xl md:text-3xl italic shadow-[8px_8px_0px_#000] md:shadow-[15px_15px_0px_#000] hover:shadow-[20px_20px_0px_#000] flex items-center justify-center gap-4 group"
-                     >
-                        {current.tag === 'LIVE NOW' ? 'JOIN NOW!' : 'REGISTER!'} 
-                        <Ticket size={24} className="md:w-8 md:h-8 group-hover:rotate-12 transition-transform" strokeWidth={3} />
-                     </button>
+                      <button 
+                        onClick={() => onJoinEvent(current)}
+                        className="flex-1 btn-premium py-5 md:py-8 text-xl md:text-3xl italic shadow-[8px_8px_0px_#000] md:shadow-[15px_15px_0px_#000] hover:shadow-[20px_20px_0px_#000] flex items-center justify-center gap-4 group"
+                      >
+                         {current.tag === 'LIVE NOW' ? 'JOIN NOW!' : 'REGISTER!'} 
+                         <Ticket size={24} className="md:w-8 md:h-8 group-hover:rotate-12 transition-transform" strokeWidth={3} />
+                      </button>
+
                      
                      <div className="flex gap-4 w-full sm:w-auto">
                         <button title="Previous Event" onClick={prev} className="flex-1 sm:w-20 bg-white border-2 md:border-4 border-black h-16 md:h-24 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[6px_6px_0px_#000] md:shadow-[8px_8px_0px_#000] active:scale-95">
@@ -198,11 +200,12 @@ export const DashboardView = ({ onNavigate }: { onNavigate: (view: any) => void 
                         {ev.desc}
                      </p>
                      <button 
-                        onClick={() => onNavigate('profile-creation')}
+                        onClick={() => onJoinEvent(ev)}
                         className="w-full py-4 bg-black text-white font-black italic text-lg hover:bg-primary transition-colors flex items-center justify-center gap-2 group-hover:scale-105 transition-transform"
                      >
                         REGISTER NOW! <Zap size={18} />
                      </button>
+
                   </motion.div>
                ))}
           </div>

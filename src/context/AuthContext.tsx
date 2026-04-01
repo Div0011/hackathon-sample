@@ -61,7 +61,7 @@ interface AuthContextType {
   allUsers: ScanectUser[];
   pendingOrganisers: PendingOrganiser[];
   login: (uniqueId: string, password: string, accessKey?: string) => { success: boolean; error?: string };
-  registerUser: (profileData: ProfileData, password: string) => string; // returns generated UID
+  registerUser: (profileData: Partial<ProfileData>, password: string) => string; // returns generated UID
   submitOrganiserApplication: (data: Omit<PendingOrganiser, 'token' | 'submittedAt'>) => string; // returns token
   logout: () => void;
   updateCurrentUserProfile: (profileData: ProfileData) => void;
@@ -279,7 +279,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [currentUser]);
 
   const login = (uniqueId: string, password: string, accessKey?: string): { success: boolean; error?: string } => {
-    const user = allUsers.find(u => u.uniqueId.trim() === uniqueId.trim());
+    // Remove all spaces to handle common typos like "SCN- USR_user"
+    const sanitizedId = uniqueId.replace(/\s+/g, '');
+    const user = allUsers.find(u => u.uniqueId === sanitizedId);
     if (!user) return { success: false, error: 'No account found with that ID.' };
     if (user.password !== password) return { success: false, error: 'Incorrect password.' };
 
@@ -303,16 +305,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return { success: true };
   };
 
-  const registerUser = (profileData: ProfileData, password: string): string => {
+  const registerUser = (profileData: Partial<ProfileData>, password: string): string => {
     const uid = generateUID();
+    const fullProfile: ProfileData = {
+      fullName: profileData.fullName || 'Anonymous User',
+      email: profileData.email || '',
+      yearOfStudy: '',
+      branch: '',
+      linkedin: '',
+      github: '',
+      portfolio: '',
+      domains: [],
+      techStack: [],
+      experience: '',
+      workingOn: '',
+      profileSummary: '',
+      goalSummary: '',
+      interestSummary: '',
+      projects: '',
+      networkingReason: '',
+      lookingFor: [],
+      interactionStyle: '',
+      communicationPreference: '',
+      availability: '',
+      personalityType: '',
+      openTo: [],
+      dreamRole: '',
+      problemsToSolve: '',
+      valueToOffer: '',
+      mbtiTrait: '',
+      ...profileData
+    };
     const newUser: ScanectUser = {
       uniqueId: uid,
       password,
       role: 'user',
-      profile: profileData,
-      registeredEmail: profileData.email,
+      profile: fullProfile,
+      registeredEmail: fullProfile.email,
       createdAt: new Date().toISOString(),
     };
+
     const updated = [...allUsers, newUser];
     setAllUsers(updated);
     setCurrentUser(newUser);

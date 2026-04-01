@@ -457,6 +457,43 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
 
   const selectedUser = users.find(u => u.id === selectedId) ?? null;
 
+  if (!currentUser) {
+    return (
+      <section className="relative min-h-screen w-full flex items-center justify-center pt-32 pb-48 px-6 md:px-12 bg-[#fffdf2] overflow-hidden">
+        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:24px_24px]" />
+        
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="max-w-4xl w-full relative z-10 text-center"
+        >
+          <div className="bg-white border-4 md:border-8 border-black p-12 md:p-24 shadow-[20px_20px_0px_#000] md:shadow-[40px_40px_0px_#000] rotate-[-1deg]">
+            <div className="w-24 h-24 bg-[#ffb703] border-4 border-black flex items-center justify-center text-black mx-auto mb-10 shadow-[8px_8px_0px_#000] rotate-[5deg]">
+              <Target size={48} strokeWidth={2.5} />
+            </div>
+            
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black italic tracking-tighter text-stroke leading-none uppercase mb-8">
+              IDENTITY SYNC<br />REQUIRED//
+            </h1>
+            
+            <p className="font-black italic lowercase opacity-70 text-xl md:text-2xl mb-12 border-y-4 border-black py-8 max-w-2xl mx-auto">
+              "we can't find your matches without knowing who you are. sync your profile to reveal your ecosystem connections."
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <button
+                onClick={() => window.location.href = '/'} // Redirect to entry or handle in App
+                className="btn-premium px-12 py-6 text-2xl italic flex items-center justify-center gap-4 shadow-[8px_8px_0px_#000]"
+              >
+                LOGIN NOW <Zap size={24} />
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative min-h-screen w-full pt-24 md:pt-48 pb-20 md:pb-32 px-6 md:px-12 bg-[#fffdf2] overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
