@@ -156,14 +156,10 @@ function App() {
             {view === 'login' && (
               <LoginView
                 onLoginSuccess={(role) => {
-                  // If user has no profile, send to profile creation
-                  if (!currentUser?.profile && role === 'user') {
-                    navigateTo('profile-creation');
-                  } else {
-                    navigateTo('dashboard');
-                  }
+                  // Always land on the profile page first, as per user request
+                  navigateTo('profile-display');
                 }}
-                onNewUser={() => navigateTo('profile-creation')}
+                onNewUser={() => navigateTo('profile-display')}
               />
             )}
             {view === 'profile-creation' && (
@@ -233,13 +229,7 @@ function App() {
                 <ul className="space-y-3 md:space-y-4 text-base md:text-lg font-black italic">
                   <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('dashboard')}>EVENTS //</li>
                   
-                  {hasProfile && (
-                    <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('profile-display')}>PROFILE //</li>
-                  )}
-                  
-                  {!hasProfile && (
-                    <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('profile-creation')}>CREATE PROFILE //</li>
-                  )}
+                  <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('profile-display')}>PROFILE //</li>
 
                   {(isAdmin || !isOrganiser) && (
                     <li className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigateTo('recommendations')}>MATCHED //</li>

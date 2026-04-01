@@ -51,15 +51,7 @@ export const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ currentView, onN
       desc: 'IDENTITY HUB',
       icon: <User />,
       color: 'bg-black',
-      show: !!currentUser?.profile,
-    },
-    {
-      id: 'profile-creation',
-      label: 'CREATE PROFILE',
-      desc: 'BUILD IDENTITY',
-      icon: <ClipboardList />,
-      color: 'bg-primary',
-      show: !currentUser?.profile,
+      show: true,
     },
     {
       id: 'recommendations',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, RefreshCw, AlertTriangle, X, Copy, Check, ExternalLink, Zap, Globe, Code, User, Target, Heart, Briefcase, Brain } from 'lucide-react';
+import { ArrowRight, RefreshCw, AlertTriangle, X, Copy, Check, ExternalLink, Zap, Globe, Code, User, Target, Heart, Briefcase, Brain, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface ProfileDisplayViewProps {
@@ -30,12 +30,57 @@ export const ProfileDisplayView: React.FC<ProfileDisplayViewProps> = ({ onGoToEv
 
   if (!profile) {
     return (
-      <section className="min-h-screen flex items-center justify-center bg-[#fffdf2] px-6">
-        <div className="text-center">
-          <p className="font-black text-2xl italic lowercase opacity-50">no profile data found.</p>
-          <button onClick={onCreateNewProfile} className="btn-premium mt-8 px-10 py-5 text-xl italic">
-            CREATE PROFILE
-          </button>
+      <section className="min-h-screen flex items-center justify-center bg-[#fffdf2] px-6 py-20">
+        <div className="max-w-4xl w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+          >
+            <div className="inline-block bg-black text-[#feff9c] border-4 border-black p-4 mb-8 rotate-[-2deg] shadow-[8px_8px_0px_#185FA5]">
+              <p className="font-black text-xl tracking-widest uppercase italic">NO PROFILE DATA FOUND</p>
+            </div>
+            <h2 className="text-4xl md:text-7xl font-black italic uppercase tracking-tighter text-stroke leading-none mb-6">
+              WELCOME BACK<span className="text-primary">.</span>
+            </h2>
+            <p className="font-black text-lg md:text-xl italic lowercase opacity-50 max-w-2xl mx-auto">
+              your profile hasn't been initialized yet. choose your next move to start your journey in the ecosystem.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Go to Events */}
+            <motion.button
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              onClick={onGoToEvents}
+              className="group bg-white border-4 border-black p-8 text-black text-left hover:bg-black hover:text-white transition-all shadow-[10px_10px_0px_#000] flex items-center justify-between"
+            >
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mb-3 group-hover:text-white/60">EXPLORE</div>
+                <h4 className="text-3xl font-black italic uppercase leading-none mb-2">GO TO EVENTS</h4>
+                <p className="font-bold lowercase italic opacity-60 text-sm group-hover:text-white/60">browse upcoming networking sessions and meet others.</p>
+              </div>
+              <ArrowRight size={36} className="group-hover:translate-x-3 transition-transform shrink-0 ml-4" />
+            </motion.button>
+
+            {/* Create Profile */}
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              onClick={onCreateNewProfile}
+              className="group bg-primary border-4 border-black p-8 text-white text-left hover:bg-black transition-all shadow-[10px_10px_0px_#000] hover:shadow-[15px_15px_0px_#185FA5] flex items-center justify-between"
+            >
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-3">INITIALIZE</div>
+                <h4 className="text-3xl font-black italic uppercase leading-none mb-2">CREATE PROFILE</h4>
+                <p className="font-bold lowercase italic opacity-70 text-sm">tell us who you are and build your professional card.</p>
+              </div>
+              <Plus size={36} className="group-hover:rotate-90 transition-transform duration-500 shrink-0 ml-4" />
+            </motion.button>
+          </div>
         </div>
       </section>
     );
