@@ -40,7 +40,7 @@ export const CustomCursor = () => {
   if (isMobile) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[10000]">
+    <div className="fixed inset-0 pointer-events-none z-[999999]">
       {/* Outer Comic Pulse */}
       <motion.div
         className="fixed w-10 h-10 border-4 border-black box-content flex items-center justify-center p-1"

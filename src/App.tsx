@@ -304,7 +304,7 @@ function App() {
                     <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => navigateTo('settings')}>SETTINGS //</li>
                   )}
                   
-                  <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => navigateTo('policy')}>PROTOCOL O7 //</li>
+                  <li className="hover:text-secondary cursor-pointer transition-colors" onClick={() => navigateTo('policy')}>PRIVACY PROTOCOL //</li>
                 </ul>
               </div>
               <div className="hidden lg:block">
@@ -319,7 +319,7 @@ function App() {
           </div>
           <div className="mt-16 md:mt-24 pt-8 md:pt-10 border-t-2 md:border-t-4 border-black w-full text-center">
             <p className="text-[8px] md:text-[10px] tracking-[0.4em] md:tracking-[0.8em] opacity-40 uppercase">
-              &copy; 2026 SCANECT // POWERED BY NEURAL APERTURE V3.0.4. ALL RIGHTS RESERVED.
+              &copy; 2026 SCANECT BY VECTOR MINDS // POWERED BY NEURAL APERTURE V3.0.4. ALL RIGHTS RESERVED.
             </p>
           </div>
         </footer>

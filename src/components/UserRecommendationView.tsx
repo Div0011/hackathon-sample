@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Zap, User, Target, ArrowLeft } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { X, Zap, User, Target, ArrowLeft, Camera, QrCode, Check, Plus, UserPlus, Repeat } from 'lucide-react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
+import { QRCodeSVG } from 'qrcode.react';
+import { createPortal } from 'react-dom';
+import { useAuth, ScanectUser } from '../context/AuthContext';
 
 interface UserRecommendationViewProps {
   onNavigate?: (view: any) => void;
@@ -398,10 +401,309 @@ const MiniCard: React.FC<{ user: MatchUser; onOpen: () => void }> = ({ user, onO
   );
 };
 
-/* ─── Main View ────────────────────────────────────────────────────── */
+/* ─── Scanned User Profile Card (Summarized) ────────────────────── */
+const ScannedUserCard: React.FC<{ 
+  user: ScanectUser, 
+  onClose: () => void,
+  onConnect: () => void 
+}> = ({ user, onClose, onConnect }) => {
+  const [connected, setConnected] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const profile = user.profile;
+
+  if (!profile) return null;
+
+  const toggleFlip = () => setIsFlipped(!isFlipped);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[3000] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+      onClick={onClose}
+    >
+      <div className="w-full max-w-xl [perspective:1000px]" onClick={e => e.stopPropagation()}>
+        <motion.div
+          initial={false}
+          animate={{ rotateY: isFlipped ? 180 : 0 }}
+          transition={{ duration: 0.6, type: 'spring', stiffness: 260, damping: 20 }}
+          style={{ transformStyle: 'preserve-3d' }}
+          className="relative w-full h-full cursor-pointer"
+          onClick={toggleFlip}
+        >
+          {/* --- FRONT SIDE --- */}
+          <div 
+            className="w-full h-full [backface-visibility:hidden]"
+            style={{ position: isFlipped ? 'absolute' : 'relative' }}
+          >
+            <div className="bg-white border-4 md:border-8 border-black shadow-[20px_20px_0px_#ffb703] relative overflow-hidden">
+              {/* Close Button */}
+              <button
+                onClick={(e) => { e.stopPropagation(); onClose(); }}
+                title="Close"
+                className="absolute top-4 right-4 z-20 w-10 h-10 bg-black text-white flex items-center justify-center border-2 border-black hover:bg-primary transition-colors"
+              >
+                <X size={18} strokeWidth={3} />
+              </button>
+
+              {/* Card Header */}
+              <div className="bg-primary p-6 md:p-8 border-b-4 md:border-b-8 border-black relative">
+                <div className="absolute top-4 right-16 bg-[#feff9c] border-2 border-black px-3 py-1 font-black text-[8px] tracking-widest uppercase rotate-[10deg] shadow-[3px_3px_0px_#000]">
+                  {profile.experience}
+                </div>
+                <p className="font-black text-[9px] tracking-[0.4em] text-white/50 uppercase mb-2">ID: {user.uniqueId}</p>
+                <h2 className="text-3xl md:text-5xl font-black italic text-white leading-none tracking-tighter uppercase">
+                  {profile.fullName}
+                </h2>
+                <p className="text-white/70 font-black italic lowercase text-base mt-2">
+                  {profile.branch} · {profile.yearOfStudy}
+                </p>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-6 md:p-8">
+                <div className="flex gap-3 mb-6">
+                  <span className="bg-secondary border-2 border-black px-4 py-1.5 font-black text-xs uppercase text-white">{profile.mbtiTrait}</span>
+                  <span className="bg-[#ffb703] border-2 border-black px-4 py-1.5 font-black text-xs uppercase">{profile.personalityType}</span>
+                </div>
+
+                <p className="font-black italic lowercase text-base leading-tight mb-6 border-l-4 border-black pl-4 opacity-80">
+                  "{profile.profileSummary}"
+                </p>
+
+                <div className="mb-4">
+                  <p className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40 mb-2">DOMAINS</p>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.domains.slice(0, 4).map(d => (
+                      <span key={d} className="bg-primary/10 border-2 border-black px-3 py-1 font-black text-[10px] uppercase">{d}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setConnected(true);
+                    onConnect();
+                  }}
+                  disabled={connected}
+                  className={`w-full py-5 font-black text-xl italic uppercase transition-all shadow-[8px_8px_0px_#000] active:translate-y-1 flex items-center justify-center gap-3 ${
+                    connected ? 'bg-black text-[#57ff57]' : 'bg-primary text-white hover:bg-black'
+                  }`}
+                >
+                  {connected ? (
+                    <><Check size={24} /> CONNECT REQUEST SENT</>
+                  ) : (
+                    <><UserPlus size={24} /> ADD AS FRIEND</>
+                  )}
+                </button>
+              </div>
+
+              <div className="bg-black px-6 py-3 flex justify-between items-center text-white/50 text-[8px] font-black uppercase tracking-[0.4em]">
+                 <span className="flex items-center gap-2"><Repeat size={10} /> TAP CARD TO FLIP</span>
+                 <span className="text-[#feff9c]">SCANECT NETWORK</span>
+              </div>
+            </div>
+          </div>
+
+          {/* --- BACK SIDE (QR) --- */}
+          <div 
+            className="w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]"
+            style={{ position: isFlipped ? 'relative' : 'absolute', top: 0, left: 0 }}
+          >
+            <div className="bg-black border-4 md:border-8 border-white p-8 md:p-12 shadow-[20px_20px_0px_#ffb703] flex flex-col items-center justify-center text-center h-full min-h-[500px]">
+              {/* Close Button */}
+              <button
+                onClick={(e) => { e.stopPropagation(); onClose(); }}
+                title="Close"
+                className="absolute top-4 right-4 z-20 w-10 h-10 bg-white text-black flex items-center justify-center border-2 border-white hover:bg-primary transition-colors"
+              >
+                <X size={18} strokeWidth={3} />
+              </button>
+
+              <div className="mb-8">
+                 <h3 className="text-3xl md:text-5xl font-black italic text-[#ffb703] uppercase leading-none tracking-tighter mb-2">NEURAL SYNC//</h3>
+                 <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.5em]">SHARE PROFILE FREQUENCY</p>
+              </div>
+
+              <div 
+                className="relative bg-white p-6 md:p-8 border-4 border-[#ffb703] shadow-[10px_10px_0px_#fff] flex items-center justify-center cursor-zoom-in"
+                onClick={(e) => { e.stopPropagation(); setIsExpanded(true); }}
+                title="Expand QR"
+              >
+                <QRCodeSVG 
+                  value={user.uniqueId} 
+                  size={180}
+                  level="H"
+                  includeMargin={false}
+                  imageSettings={{
+                    src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+                    x: undefined,
+                    y: undefined,
+                    height: 45,
+                    width: 45,
+                    excavate: true,
+                  }}
+                />
+                {/* ID Overlay */}
+                <div className="absolute bg-[#ffb703] border-2 border-black px-2 py-1 flex items-center justify-center shadow-[2px_2px_0px_#000]">
+                  <span className="font-black text-[9px] tracking-tighter text-black uppercase leading-none">{user.uniqueId}</span>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <div className="bg-primary text-white border-2 border-white px-6 py-2 font-black text-xl italic tracking-widest inline-block mb-4 uppercase">
+                  {user.uniqueId}
+                </div>
+              </div>
+
+              <div className="absolute bottom-6 w-full px-8 flex justify-between items-center text-white/40 text-[8px] font-black uppercase tracking-[0.4em]">
+                 <span className="flex items-center gap-2 text-[#ffb703]"><Repeat size={10} /> TAP TO REVERT</span>
+                 <span>SCANECT SYNC</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* ── QR EXPANSION MODAL (Z-INTERCEPT) ────────────────────────── */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsExpanded(false)}
+            className="fixed inset-0 z-[10000] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white border-4 md:border-8 border-black p-4 md:p-8 shadow-[12px_12px_0px_#ffb703] relative max-w-sm w-fit text-center mx-auto"
+            >
+              <button
+                onClick={() => setIsExpanded(false)}
+                className="absolute -top-12 right-0 bg-white text-black px-4 py-2 border-2 border-black font-black text-xs uppercase italic hover:bg-primary transition-colors"
+                title="Close Expand"
+              >
+                CLOSE [X]
+              </button>
+
+              <div className="mb-4 md:mb-6">
+                <h3 className="text-xl md:text-3xl font-black italic text-black uppercase leading-none tracking-tighter mb-1">NEURAL SYNC//</h3>
+                <p className="text-black/40 text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em]">SCAN TO CONNECT</p>
+              </div>
+
+              <div className="relative bg-white p-2 md:p-6 border-2 md:border-4 border-black shadow-[6px_6px_0px_#000] mx-auto inline-block">
+                <QRCodeSVG 
+                  value={user.uniqueId} 
+                  size={220}
+                  level="H"
+                  includeMargin={false}
+                  imageSettings={{
+                    src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+                    height: 50,
+                    width: 50,
+                    excavate: true,
+                  }}
+                />
+                {/* ID Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-[#ffb703] border border-black px-2 py-1 flex items-center justify-center shadow-[2px_2px_0px_#000]">
+                    <span className="font-black text-[10px] tracking-tighter text-black uppercase leading-none">{user.uniqueId}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 md:mt-12 space-y-4">
+                <div className="bg-black text-white px-8 py-4 font-black text-4xl italic tracking-widest inline-block uppercase">
+                  {user.uniqueId}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+/* ─── Scanner Implementation ────────────────────────────────────── */
+const QRScannerOverlay: React.FC<{ onResult: (uid: string) => void, onClose: () => void }> = ({ onResult, onClose }) => {
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+
+  useEffect(() => {
+    scannerRef.current = new Html5QrcodeScanner(
+      "reader",
+      { 
+        fps: 10, 
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+          const minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+          const qrboxSize = Math.floor(minEdgeSize * 0.7);
+          return { width: qrboxSize, height: qrboxSize };
+        },
+        aspectRatio: 1.0 
+      },
+      /* verbose= */ false
+    );
+    
+    scannerRef.current.render(onResult, (err) => {
+      // ignore scan errors
+    });
+
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(e => console.error("Failed to clear scanner", e));
+      }
+    };
+  }, [onResult]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[3000] bg-black/90 flex flex-col items-center justify-center p-6 backdrop-blur-lg"
+    >
+      <div className="w-full max-w-lg bg-white border-8 border-black shadow-[20px_20px_0px_#ffb703] relative p-6">
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 bg-white text-black px-6 py-2 border-4 border-black font-black text-sm uppercase italic mb-4 hover:bg-primary transition-colors"
+        >
+          CLOSE SCANNER [X]
+        </button>
+
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl md:text-5xl font-black italic uppercase italic tracking-tighter text-stroke-sm leading-none mb-3">
+             CAMERA <span className="bg-black text-[#ffb703] not-italic px-4">SYNC//</span>
+          </h2>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 italic">
+             "pointing camera at member neural tag..."
+          </p>
+        </div>
+
+        {/* Scanner Target Area */}
+        <div id="reader" className="w-full overflow-hidden border-4 border-black bg-gray-50" />
+        
+        <div className="mt-8 flex items-center justify-center gap-4 text-[10px] font-black italic opacity-40 uppercase tracking-widest text-center">
+           <Zap size={12} className="text-secondary" /> USE NEURAL LINK TO PROTOCOL O7 <Zap size={12} className="text-primary" />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { currentUser } = useAuth();
+  const [isScanning, setIsScanning] = useState(false);
+  const [scannedUser, setScannedUser] = useState<ScanectUser | null>(null);
+  
+  const { currentUser, allUsers } = useAuth();
 
   const currentUserSkills: string[] = [
     ...(currentUser?.profile?.domains ?? []),
@@ -455,6 +757,15 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
     },
   ];
 
+  const handleScan = (decodedText: string) => {
+    // Find user in allUsers by uniqueId
+    const found = allUsers.find(u => u.uniqueId === decodedText);
+    if (found) {
+      setScannedUser(found);
+      setIsScanning(false);
+    }
+  };
+
   const selectedUser = users.find(u => u.id === selectedId) ?? null;
 
   if (!currentUser) {
@@ -482,7 +793,7 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <button
-                onClick={() => window.location.href = '/'} // Redirect to entry or handle in App
+                onClick={() => window.location.href = '/'} 
                 className="btn-premium px-12 py-6 text-2xl italic flex items-center justify-center gap-4 shadow-[8px_8px_0px_#000]"
               >
                 LOGIN NOW <Zap size={24} />
@@ -501,18 +812,35 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
         {/* Header */}
         <motion.div
           className="mb-16 md:mb-24"
-          animate={{ opacity: selectedId ? 0 : 1 }}
+          animate={{ opacity: selectedId || isScanning || scannedUser ? 0 : 1 }}
         >
-          <h1 className="text-4xl sm:text-6xl md:text-[8rem] lg:text-[10rem] font-black italic tracking-tight leading-none lowercase">
-            member{' '}
-            <span className="bg-[#ffb703] px-4 md:px-6 text-black not-italic">
-              discovery//
-            </span>
-          </h1>
-          <p className="text-lg md:text-2xl font-black mt-8 md:mt-12 lowercase italic border-l-4 md:border-l-8 border-black pl-6 md:pl-8 max-w-2xl leading-snug">
-            "connect with peer members across the scanect ecosystem. open a card then tap{' '}
-            <span className="text-primary not-italic uppercase">VIEW COMPATIBILITY</span> to see your match score."
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+            <div className="max-w-4xl">
+              <h1 className="text-4xl sm:text-6xl md:text-[8rem] lg:text-[10rem] font-black italic tracking-tight leading-none lowercase">
+                member{' '}
+                <span className="bg-[#ffb703] px-4 md:px-6 text-black not-italic">
+                  discovery//
+                </span>
+              </h1>
+              <p className="text-lg md:text-2xl font-black mt-8 md:mt-12 lowercase italic border-l-4 md:border-l-8 border-black pl-6 md:pl-8 leading-snug">
+                "connect with peer members across the scanect ecosystem. open a card then tap{' '}
+                <span className="text-primary not-italic uppercase">VIEW COMPATIBILITY</span> to see your match score."
+              </p>
+            </div>
+
+            {/* NEURAL SCAN ACTION */}
+            <div className="shrink-0 mb-4">
+               <button 
+                 onClick={() => setIsScanning(true)}
+                 className="flex flex-col items-center gap-4 group"
+               >
+                  <div className="w-24 h-24 md:w-32 md:h-32 bg-black text-[#ffb703] flex items-center justify-center border-4 border-black shadow-[10px_10px_0px_#ffb703] group-hover:shadow-[15px_15px_0px_#ffb703] group-hover:-translate-y-2 transition-all">
+                    <Camera size={48} strokeWidth={2.5} />
+                  </div>
+                  <span className="font-black text-sm uppercase italic tracking-widest text-[#ffb703] bg-black px-4 py-1">OPEN SCANNER</span>
+               </button>
+            </div>
+          </div>
 
           {/* Tier legend */}
           <div className="flex flex-wrap gap-6 mt-8">
@@ -541,16 +869,39 @@ export const UserRecommendationView: React.FC<UserRecommendationViewProps> = () 
         </div>
       </div>
 
-      {/* Expanded modal — outside grid flow */}
-      <AnimatePresence>
-        {selectedUser && (
-          <ExpandedCard
-            user={selectedUser}
-            currentUserSkills={currentUserSkills}
-            onClose={() => setSelectedId(null)}
-          />
-        )}
-      </AnimatePresence>
+      {/* OVERLAYS (PORTALED) */}
+      {createPortal(
+        <AnimatePresence>
+          {/* Recommendation Detail */}
+          {selectedUser && (
+            <ExpandedCard
+              user={selectedUser}
+              currentUserSkills={currentUserSkills}
+              onClose={() => setSelectedId(null)}
+            />
+          )}
+
+          {/* Neural Scanner */}
+          {isScanning && (
+            <QRScannerOverlay 
+              onResult={handleScan} 
+              onClose={() => setIsScanning(false)} 
+            />
+          )}
+
+          {/* Scanned Result Card */}
+          {scannedUser && (
+            <ScannedUserCard 
+              user={scannedUser} 
+              onClose={() => setScannedUser(null)} 
+              onConnect={() => {
+                console.log("Connecting with", scannedUser.uniqueId);
+              }}
+            />
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 };
