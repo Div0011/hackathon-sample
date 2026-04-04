@@ -214,14 +214,25 @@ function loadUsers(): ScanectUser[] {
     const raw = localStorage.getItem(STORAGE_KEYS.USERS);
     if (raw) {
       const parsed = JSON.parse(raw) as ScanectUser[];
-      // Ensure demo users always exist
-      const ids = parsed.map(u => u.uniqueId);
-      DEMO_USERS.forEach(demo => {
-        if (!ids.includes(demo.uniqueId)) {
-          parsed.unshift(demo);
+      // Ensure demo users always have correct credentials
+      const result: ScanectUser[] = [];
+      const seenIds = new Set<string>();
+      
+      // First add all non-demo users from localStorage
+      parsed.forEach(user => {
+        if (!DEMO_USERS.some(d => d.uniqueId === user.uniqueId)) {
+          result.push(user);
+          seenIds.add(user.uniqueId);
         }
       });
-      return parsed;
+      
+      // Then add/update demo users with correct credentials
+      DEMO_USERS.forEach(demo => {
+        result.push(demo);
+        seenIds.add(demo.uniqueId);
+      });
+      
+      return result;
     }
   } catch { /* ignore */ }
   return [...DEMO_USERS];
@@ -277,6 +288,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.removeItem(STORAGE_KEYS.CURRENT_USER_ID);
     }
   }, [currentUser]);
+
+  // Ensure demo users always have correct credentials on app startup
+  useEffect(() => {
+    const hasCorrectDemos = DEMO_USERS.every(demo =>
+      allUsers.some(u => u.uniqueId === demo.uniqueId && u.password === demo.password)
+    );
+
+    if (!hasCorrectDemos) {
+      // Re-initialize users to fix corrupted demo credentials
+      const reloadedUsers = loadUsers();
+      setAllUsers(reloadedUsers);
+      // Also reset current user if they no longer exist or have wrong password
+      if (currentUser) {
+        const stillValidUser = reloadedUsers.find(
+          u => u.uniqueId === currentUser.uniqueId && u.password === currentUser.password
+        );
+        if (!stillValidUser) {
+          setCurrentUser(null);
+          localStorage.removeItem(STORAGE_KEYS.CURRENT_USER_ID);
+        }
+      }
+    }
+  }, []);
 
   const login = (uniqueId: string, password: string, accessKey?: string): { success: boolean; error?: string } => {
     // Remove all spaces to handle common typos like "SCN- USR_user"
