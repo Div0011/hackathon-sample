@@ -318,6 +318,12 @@ function App() {
             </div>
           </div>
           <div className="mt-16 md:mt-24 pt-8 md:pt-10 border-t-2 md:border-t-4 border-black w-full text-center">
+            <p className="text-[10px] md:text-sm font-black italic uppercase mb-4">
+              MADE BY TEAM VECTOR MINDS: ARYAN, SHRUTI, HARSHIT
+            </p>
+            <p className="text-[8px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest mb-6 px-4">
+              UNDER THE GUIDANCE OF DR. VASUDA, DR. AKANKSHA AND SHRADDHA MA'AM
+            </p>
             <p className="text-[8px] md:text-[10px] tracking-[0.4em] md:tracking-[0.8em] opacity-40 uppercase">
               &copy; 2026 SCANECT BY VECTOR MINDS // POWERED BY NEURAL APERTURE V3.0.4. ALL RIGHTS RESERVED.
             </p>

@@ -85,7 +85,7 @@ export const PlatformPolicyView: React.FC<PlatformPolicyViewProps> = ({ onNaviga
 
             </div>
 
-            <div className="mt-16 pt-8 border-t-2 border-black/10 flex flex-wrap gap-4 justify-center">
+            <div className="mt-16 pt-8 border-t-2 border-black/10 flex flex-wrap gap-4 justify-center mb-12">
                <div className="flex items-center gap-2 text-[10px] font-black opacity-40 uppercase tracking-widest">
                   <Database size={12} /> ENCRYPTED STORAGE
                </div>
@@ -95,6 +95,28 @@ export const PlatformPolicyView: React.FC<PlatformPolicyViewProps> = ({ onNaviga
                <div className="flex items-center gap-2 text-[10px] font-black opacity-40 uppercase tracking-widest">
                   <Trash2 size={12} /> INSTANT PERMANENT DELETION
                </div>
+            </div>
+
+            {/* Team Credits */}
+            <div className="pt-12 border-t-4 border-black border-dashed flex flex-col items-center text-center">
+               <div className="bg-black text-white px-4 py-1 text-[10px] font-black uppercase tracking-widest mb-6 rotate-1">
+                  OFFICIAL DEVELOPMENT UNIT
+               </div>
+               
+               <div className="mb-8">
+                  <p className="text-[10px] md:text-xs font-black uppercase tracking-widest opacity-40 mb-2">Made by</p>
+                  <h4 className="text-xl md:text-3xl font-black italic uppercase leading-none mb-2">Team Vector Minds..</h4>
+                  <p className="text-xs md:text-sm font-bold opacity-70 uppercase tracking-[0.2em]">Aryan, Shruti, Harshit</p>
+               </div>
+
+               <div className="relative">
+                  <div className="absolute -left-4 -top-3 w-8 h-[2px] bg-black/20" />
+                  <div className="absolute -right-4 -top-3 w-8 h-[2px] bg-black/20" />
+                  <p className="text-[10px] md:text-xs font-black uppercase tracking-widest opacity-40 mb-3">Under the guidance of</p>
+               </div>
+               <p className="text-xs md:text-lg font-black italic uppercase text-primary">
+                  Dr. Vasuda, Dr. Akanksha and Shraddha ma'am
+               </p>
             </div>
          </motion.div>
 
