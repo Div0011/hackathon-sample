@@ -11,26 +11,29 @@ export interface ProfileData {
   branch: string;
   linkedin: string;
   github: string;
+  githubUsername: string;
+  leetcode: string;
+  leetcodeUsername: string;
   portfolio: string;
   domains: string[];
   techStack: string[];
-  experience: string;
   workingOn: string;
   profileSummary: string;
   goalSummary: string;
   interestSummary: string;
-  projects: string;
+  projectSummary: string;
+  internshipCount: string;
+  contests: { type: string }[];
+  yearsOfExperience: string;
+  initialJobRole: string;
+  currentJobRole: string;
   networkingReason: string;
   lookingFor: string[];
-  interactionStyle: string;
-  communicationPreference: string;
   availability: string;
-  personalityType: string;
   openTo: string[];
   dreamRole: string;
   problemsToSolve: string;
   valueToOffer: string;
-  mbtiTrait: string;
 }
 
 export interface ScanectUser {
@@ -85,87 +88,96 @@ const ADMIN_PROFILE: ProfileData = {
   fullName: 'Arjun Sharma',
   email: 'admin@scanect.io',
   yearOfStudy: 'Graduate',
-  branch: 'Computer Science',
+  branch: 'CSE',
   linkedin: 'https://linkedin.com/in/arjunsharma-admin',
   github: 'https://github.com/arjunsharma',
+  githubUsername: 'arjunsharma',
+  leetcode: 'https://leetcode.com/arjunsharma',
+  leetcodeUsername: 'arjun_sh',
   portfolio: 'https://arjunsharma.dev',
   domains: ['AI/ML', 'Cloud', 'Cybersecurity'],
   techStack: ['Python', 'AWS', 'Docker', 'Node.js'],
-  experience: 'Wizard',
   workingOn: 'Building the Scanect platform infrastructure and AI matching engine.',
   profileSummary: 'Platform architect and tech lead behind Scanect. Passionate about building systems that connect brilliant minds.',
   goalSummary: 'Scale Scanect to 10,000 active users and make it the go-to networking platform for hackathon communities.',
   interestSummary: 'Distributed systems, AI research, open-source tooling, and community building.',
-  projects: 'Scanect v3.0, NeuralNet Optimizer, CloudBase CDN',
+  projectSummary: 'Scanect v3.0, NeuralNet Optimizer, CloudBase CDN',
+  internshipCount: '5',
+  contests: [{ type: 'Hackathon' }, { type: 'Codeforces' }],
+  yearsOfExperience: '8',
+  initialJobRole: 'Junior Architect',
+  currentJobRole: 'CTO / Platform Architect',
   networkingReason: 'Building',
   lookingFor: ['Collaborators', 'Investors', 'Hiring Managers'],
-  interactionStyle: 'Ambivert',
-  communicationPreference: 'Real-time (Video/Call)',
   availability: 'Weekdays',
-  personalityType: 'Analyst',
   openTo: ['Full-time', 'Partnerships', 'Open Source'],
   dreamRole: 'CTO of a leading AI infrastructure company',
   problemsToSolve: 'Making meaningful connections in a noisy networking environment.',
   valueToOffer: 'Deep technical expertise in system design, AI, and product strategy.',
-  mbtiTrait: 'INTJ',
 };
 
 const ORGANISER_PROFILE: ProfileData = {
   fullName: 'Priya Mehta',
   email: 'priya@hackfest.in',
   yearOfStudy: '4th Year',
-  branch: 'Information Technology',
+  branch: 'IT',
   linkedin: 'https://linkedin.com/in/priyamehta-events',
   github: 'https://github.com/priyamehta',
+  githubUsername: 'priyamehta',
+  leetcode: '',
+  leetcodeUsername: '',
   portfolio: 'https://hackfest.in',
   domains: ['UI/UX', 'Web Dev', 'App Dev'],
   techStack: ['React', 'Next.js', 'Figma', 'Firebase'],
-  experience: 'Advanced',
   workingOn: 'Organising HackFest Delhi 2026 – the largest student hackathon in NCR.',
   profileSummary: 'Event organiser and community builder with 3+ years experience running college tech events.',
   goalSummary: 'Create inclusive spaces for students to build, network, and grow together.',
   interestSummary: 'Event management, product design, community development, hackathon culture.',
-  projects: 'HackFest 2024, TechTalks Delhi, Startup Connect NCR',
+  projectSummary: 'HackFest 2024, TechTalks Delhi, Startup Connect NCR',
+  internshipCount: '3',
+  contests: [{ type: 'Hackathon' }],
+  yearsOfExperience: '3',
+  initialJobRole: 'Junior Organizer',
+  currentJobRole: 'Community Lead',
   networkingReason: 'Building',
   lookingFor: ['Collaborators', 'Mentors', 'Peers'],
-  interactionStyle: 'Extrovert',
-  communicationPreference: 'Real-time (Video/Call)',
   availability: 'Weekends',
-  personalityType: 'Diplomat',
   openTo: ['Internships', 'Hackathons', 'Partnerships'],
   dreamRole: 'Community Lead at a top tech company',
   problemsToSolve: 'Breaking the barrier between technical talent and real-world opportunities.',
   valueToOffer: 'Event management skills, design thinking, and a wide network of student communities.',
-  mbtiTrait: 'ENFJ',
 };
 
 const USER_PROFILE: ProfileData = {
   fullName: 'Rohan Verma',
   email: 'rohan.v@example.com',
   yearOfStudy: '3rd Year',
-  branch: 'Electronics & Computer Science',
+  branch: 'CSE',
   linkedin: 'https://linkedin.com/in/rohanverma-dev',
   github: 'https://github.com/rohanverma',
+  githubUsername: 'rohanverma',
+  leetcode: 'https://leetcode.com/rohan_v',
+  leetcodeUsername: 'rohan_v',
   portfolio: '',
   domains: ['Web Dev', 'App Dev', 'IoT'],
   techStack: ['React', 'Node.js', 'Python', 'Firebase'],
-  experience: 'Intermediate',
   workingOn: 'An IoT dashboard for smart home automation using React and MQTT.',
   profileSummary: 'Third-year CS student passionate about building useful products. Love hackathons and late-night coding sessions.',
   goalSummary: 'Land a SWE internship at a product startup and eventually start my own company.',
   interestSummary: 'Full-stack development, IoT, open source contributions, startup culture.',
-  projects: 'SmartHome Dashboard, Campus Canteen App, HackerPal Chrome Extension',
+  projectSummary: 'SmartHome Dashboard, Campus Canteen App, HackerPal Chrome Extension',
+  internshipCount: '1',
+  contests: [{ type: 'Hackathon' }, { type: 'LeetCode' }],
+  yearsOfExperience: '1',
+  initialJobRole: 'Web Intern',
+  currentJobRole: 'Junior Developer (Intern)',
   networkingReason: 'Finding a Job',
   lookingFor: ['Mentors', 'Collaborators', 'Hiring Managers'],
-  interactionStyle: 'Ambivert',
-  communicationPreference: 'Async (Text/Mail)',
   availability: 'Weekends',
-  personalityType: 'Explorer',
   openTo: ['Internships', 'Hackathons', 'Open Source'],
   dreamRole: 'Software Engineer at a product startup',
   problemsToSolve: 'Finding relevant mentors and collaborators for hackathon projects.',
   valueToOffer: 'Quick learner, full-stack skills, strong problem-solving, and high energy.',
-  mbtiTrait: 'ENTP',
 };
 
 const DEMO_USERS: ScanectUser[] = [
@@ -344,31 +356,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const fullProfile: ProfileData = {
       fullName: profileData.fullName || 'Anonymous User',
       email: profileData.email || '',
-      yearOfStudy: '',
-      branch: '',
-      linkedin: '',
-      github: '',
-      portfolio: '',
-      domains: [],
-      techStack: [],
-      experience: '',
-      workingOn: '',
-      profileSummary: '',
-      goalSummary: '',
-      interestSummary: '',
-      projects: '',
-      networkingReason: '',
-      lookingFor: [],
-      interactionStyle: '',
-      communicationPreference: '',
-      availability: '',
-      personalityType: '',
-      openTo: [],
-      dreamRole: '',
-      problemsToSolve: '',
-      valueToOffer: '',
-      mbtiTrait: '',
-      ...profileData
+      yearOfStudy: profileData.yearOfStudy || '',
+      branch: profileData.branch || '',
+      linkedin: profileData.linkedin || '',
+      github: profileData.github || '',
+      githubUsername: profileData.githubUsername || '',
+      leetcode: profileData.leetcode || '',
+      leetcodeUsername: profileData.leetcodeUsername || '',
+      portfolio: profileData.portfolio || '',
+      domains: profileData.domains || [],
+      techStack: profileData.techStack || [],
+      workingOn: profileData.workingOn || '',
+      projectSummary: profileData.projectSummary || '',
+      internshipCount: profileData.internshipCount || '',
+      contests: profileData.contests || [],
+      yearsOfExperience: profileData.yearsOfExperience || '',
+      initialJobRole: profileData.initialJobRole || '',
+      currentJobRole: profileData.currentJobRole || '',
+      profileSummary: profileData.profileSummary || '',
+      goalSummary: profileData.goalSummary || '',
+      interestSummary: profileData.interestSummary || '',
+      networkingReason: profileData.networkingReason || '',
+      lookingFor: profileData.lookingFor || [],
+      availability: profileData.availability || '',
+      openTo: profileData.openTo || [],
+      dreamRole: profileData.dreamRole || '',
+      problemsToSolve: profileData.problemsToSolve || '',
+      valueToOffer: profileData.valueToOffer || '',
     };
     const newUser: ScanectUser = {
       uniqueId: uid,

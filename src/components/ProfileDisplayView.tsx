@@ -213,18 +213,27 @@ export const ProfileDisplayView: React.FC<ProfileDisplayViewProps> = ({ onGoToEv
               <InfoRow label="Email" value={profile.email} />
               <InfoRow label="Year" value={profile.yearOfStudy} />
               <InfoRow label="Branch" value={profile.branch} />
-              {profile.linkedin && (
-                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer"
-                   className="flex items-center gap-2 text-primary font-black text-sm mt-4 hover:underline">
-                  <ExternalLink size={14} /> LinkedIn Profile
-                </a>
-              )}
-              {profile.github && (
-                <a href={profile.github} target="_blank" rel="noopener noreferrer"
-                   className="flex items-center gap-2 text-black font-black text-sm mt-2 hover:underline">
-                  <Code size={14} /> GitHub Profile
-                </a>
-              )}
+              
+              <div className="mt-6 space-y-4">
+                {profile.linkedin && (
+                  <a href={profile.linkedin} target="_blank" rel="noopener noreferrer"
+                     className="flex items-center gap-2 text-[#0077b5] font-black text-sm hover:underline">
+                    <ExternalLink size={14} /> LinkedIn
+                  </a>
+                )}
+                {profile.github && (
+                  <a href={profile.github} target="_blank" rel="noopener noreferrer"
+                     className="flex items-center gap-2 text-black font-black text-sm hover:underline">
+                    <Code size={14} /> GitHub {profile.githubUsername && `(@${profile.githubUsername})`}
+                  </a>
+                )}
+                {profile.leetcode && (
+                  <a href={profile.leetcode} target="_blank" rel="noopener noreferrer"
+                     className="flex items-center gap-2 text-[#ffa116] font-black text-sm hover:underline">
+                    <Target size={14} /> LeetCode {profile.leetcodeUsername && `(@${profile.leetcodeUsername})`}
+                  </a>
+                )}
+              </div>
             </div>
 
             <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_#000]">
@@ -244,63 +253,53 @@ export const ProfileDisplayView: React.FC<ProfileDisplayViewProps> = ({ onGoToEv
                   <span key={t} className="bg-black text-white border-2 border-black px-3 py-1 font-black text-xs uppercase">{t}</span>
                 ))}
               </div>
-              <InfoRow label="Experience" value={profile.experience} />
+              <InfoRow label="Experience" value={profile.yearsOfExperience ? `${profile.yearsOfExperience} Years` : 'N/A'} />
               <InfoRow label="Currently on" value={profile.workingOn} />
             </div>
 
             <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_#000]">
               <div className="flex items-center gap-3 mb-6">
                 <Target size={20} className="text-secondary" />
-                <span className="font-black text-sm uppercase tracking-widest text-secondary">// Goals</span>
+                <span className="font-black text-sm uppercase tracking-widest text-secondary">// Trajectory</span>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">PROFILE BIO</p>
-              <p className="font-black italic lowercase text-sm leading-tight mb-4 border-l-4 border-primary pl-4">"{profile.profileSummary}"</p>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">DREAM ROLE</p>
-              <p className="font-black italic lowercase text-sm leading-tight mb-4 border-l-4 border-[#ffb703] pl-4">"{profile.dreamRole}"</p>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">GOAL</p>
-              <p className="font-black italic lowercase text-sm leading-tight border-l-4 border-secondary pl-4">"{profile.goalSummary}"</p>
-            </div>
+              
+              {(profile.yearOfStudy === '1st Year' || profile.yearOfStudy === '2nd Year') && (
+                <>
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">PROJECTS</p>
+                  <p className="font-black italic lowercase text-sm leading-tight mb-4 border-l-4 border-primary pl-4">"{profile.projectSummary}"</p>
+                </>
+              )}
 
-            <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_#000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Globe size={20} className="text-primary" />
-                <span className="font-black text-sm uppercase tracking-widest text-primary">// Networking</span>
-              </div>
-              <InfoRow label="Reason" value={profile.networkingReason} />
-              <InfoRow label="Style" value={profile.interactionStyle} />
-              <InfoRow label="Comm Pref" value={profile.communicationPreference} />
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3 mt-4">LOOKING FOR</p>
-              <div className="flex flex-wrap gap-2">
-                {profile.lookingFor.map(l => (
-                  <span key={l} className="bg-[#185FA5]/10 border-2 border-black px-3 py-1 font-black text-xs uppercase">{l}</span>
-                ))}
-              </div>
-            </div>
+              {(profile.yearOfStudy === '3rd Year' || profile.yearOfStudy === '4th Year') && (
+                <>
+                  <InfoRow label="Internships" value={profile.internshipCount} />
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3 mt-4">CONTESTS</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {profile.contests.map((c, idx) => (
+                      <span key={idx} className="bg-secondary/20 border-2 border-black px-3 py-1 font-black text-xs uppercase">{c.type}</span>
+                    ))}
+                  </div>
+                </>
+              )}
 
-            <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_#000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Brain size={20} className="text-[#ffb703]" />
-                <span className="font-black text-sm uppercase tracking-widest text-[#ffb703]">// Personality</span>
-              </div>
-              <InfoRow label="MBTI" value={profile.mbtiTrait} />
-              <InfoRow label="Type" value={profile.personalityType} />
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3 mt-4">OPEN TO</p>
-              <div className="flex flex-wrap gap-2">
-                {profile.openTo.map(o => (
-                  <span key={o} className="bg-secondary/20 border-2 border-black px-3 py-1 font-black text-xs uppercase">{o}</span>
-                ))}
-              </div>
-            </div>
+              {(profile.yearOfStudy === 'Professional' || profile.yearOfStudy === 'Fresher' || profile.yearOfStudy === 'Graduate') && (
+                <>
+                  <InfoRow label="Initial Role" value={profile.initialJobRole} />
+                  <InfoRow label="Current Role" value={profile.currentJobRole} />
+                </>
+              )}
 
-            <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_#000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Heart size={20} className="text-secondary" />
-                <span className="font-black text-sm uppercase tracking-widest text-secondary">// Value</span>
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2 mt-6">DREAM ROLE</p>
+              <p className="font-black italic lowercase text-sm leading-tight mb-4 border-l-4 border-black pl-4">"{profile.dreamRole}"</p>
+              
+              <div className="mt-6 border-t-2 border-black pt-4">
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3">LOOKING FOR</p>
+                <div className="flex flex-wrap gap-2">
+                  {profile.lookingFor.map(l => (
+                    <span key={l} className="bg-[#185FA5]/10 border-2 border-black px-3 py-1 font-black text-xs uppercase">{l}</span>
+                  ))}
+                </div>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">PROBLEMS I SOLVE</p>
-              <p className="font-black italic lowercase text-sm leading-tight mb-4 border-l-4 border-primary pl-4">"{profile.problemsToSolve}"</p>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">VALUE I OFFER</p>
-              <p className="font-black italic lowercase text-sm leading-tight border-l-4 border-[#ffb703] pl-4">"{profile.valueToOffer}"</p>
             </div>
           </div>
         </motion.div>
@@ -347,7 +346,7 @@ export const ProfileDisplayView: React.FC<ProfileDisplayViewProps> = ({ onGoToEv
                   {/* Card Header */}
                   <div className="bg-primary p-6 md:p-8 border-b-4 md:border-b-8 border-black relative">
                     <div className="absolute top-4 right-4 bg-[#feff9c] border-2 border-black px-3 py-1 font-black text-[8px] tracking-widest uppercase rotate-[10deg] shadow-[3px_3px_0px_#000]">
-                      {profile.experience}
+                      {profile.yearOfStudy}
                     </div>
                     {/* UID at top of card */}
                     <p className="font-black text-[9px] tracking-[0.4em] text-white/50 uppercase mb-2">ID: {uid}</p>
@@ -361,10 +360,11 @@ export const ProfileDisplayView: React.FC<ProfileDisplayViewProps> = ({ onGoToEv
 
                   {/* Card Body */}
                   <div className="p-6 md:p-8">
-                    {/* MBTI + Personality */}
+                    {/* Socials Summary */}
                     <div className="flex gap-3 mb-6">
-                      <span className="bg-secondary border-2 border-black px-4 py-1.5 font-black text-sm uppercase">{profile.mbtiTrait}</span>
-                      <span className="bg-[#ffb703] border-2 border-black px-4 py-1.5 font-black text-sm uppercase">{profile.personalityType}</span>
+                      {profile.github && <span className="bg-black text-white border-2 border-black px-4 py-1.5 font-black text-[10px] uppercase">GITHUB</span>}
+                      {profile.leetcode && <span className="bg-[#ffa116] border-2 border-black px-4 py-1.5 font-black text-[10px] uppercase">LEETCODE</span>}
+                      {profile.linkedin && <span className="bg-[#0077b5] text-white border-2 border-black px-4 py-1.5 font-black text-[10px] uppercase">LINKEDIN</span>}
                     </div>
 
                     {/* Bio */}

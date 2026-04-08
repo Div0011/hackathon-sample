@@ -22,31 +22,33 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
     // Step 2
     linkedin: '',
     github: '',
+    githubUsername: '',
+    leetcode: '',
+    leetcodeUsername: '',
     portfolio: '',
     // Step 3
     domains: [] as string[],
     techStack: [] as string[],
-    experience: '',
     workingOn: '',
     // Step 4
+    projectSummary: '',
+    internshipCount: '',
+    contests: [{ type: '' }],
+    yearsOfExperience: '',
+    initialJobRole: '',
+    currentJobRole: '',
     profileSummary: '',
     goalSummary: '',
     interestSummary: '',
-    projects: '',
     // Step 5
     networkingReason: '',
     lookingFor: [] as string[],
-    interactionStyle: '',
-    communicationPreference: '',
     // Step 6
-    availability: '',
-    personalityType: '',
     openTo: [] as string[],
     dreamRole: '',
     // Step 7
     problemsToSolve: '',
-    valueToOffer: '',
-    mbtiTrait: ''
+    valueToOffer: ''
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -55,6 +57,8 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
   const techStackList = ['React', 'Next.js', 'Typescript', 'Python', 'Node.js', 'Golang', 'Rust', 'Swift', 'Kotlin', 'AWS', 'Docker', 'Firebase', 'Figma', 'Solidity'];
   const lookingForList = ['Mentors', 'Mentees', 'Collaborators', 'Founders', 'Investors', 'Hiring Managers', 'Peers'];
   const openToList = ['Internships', 'Full-time', 'Freelance', 'Hackathons', 'Open Source', 'Partnerships'];
+  const branchList = ['CSE', 'ECE', 'MECH', 'IT', 'CIVIL', 'ELECTRICAL', 'CHEMICAL', 'BIOTECH', 'OTHER'];
+  const contestTypes = ['Codeforces', 'LeetCode', 'CodeChef', 'Hackathon', 'Capture The Flag (CTF)', 'Math Olympiad', 'Other'];
 
   const validateStep = (currentStep: number) => {
     const newErrors: Record<string, string> = {};
@@ -68,14 +72,22 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
       if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     } else if (currentStep === 2) {
       if (!formData.linkedin) newErrors.linkedin = 'LinkedIn URL is required';
+      if (formData.github && !formData.githubUsername) newErrors.githubUsername = 'GitHub Username is required';
+      if (formData.leetcode && !formData.leetcodeUsername) newErrors.leetcodeUsername = 'LeetCode Username is required';
     } else if (currentStep === 3) {
       if (formData.domains.length === 0) newErrors.domains = 'Select at least one domain';
-      if (!formData.experience) newErrors.experience = 'Select experience level';
       if (!formData.workingOn) newErrors.workingOn = 'Required';
     } else if (currentStep === 4) {
-      if (!formData.profileSummary) newErrors.profileSummary = 'Required';
-      if (!formData.goalSummary) newErrors.goalSummary = 'Required';
-      if (!formData.interestSummary) newErrors.interestSummary = 'Required';
+      const year = formData.yearOfStudy;
+      if ((year === '1st Year' || year === '2nd Year') && !formData.projectSummary) {
+        newErrors.projectSummary = 'Project summary is required';
+      } else if ((year === '3rd Year' || year === '4th Year')) {
+        if (!formData.internshipCount) newErrors.internshipCount = 'Required';
+      } else if ((year === 'Fresher' || year === 'Professional' || year === 'Graduate')) {
+        if (!formData.yearsOfExperience) newErrors.yearsOfExperience = 'Required';
+        if (!formData.initialJobRole) newErrors.initialJobRole = 'Required';
+        if (!formData.currentJobRole) newErrors.currentJobRole = 'Required';
+      }
     } else if (currentStep === 5) {
       if (!formData.networkingReason) newErrors.networkingReason = 'Required';
     } else if (currentStep === 7) {
@@ -171,31 +183,35 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
                     {errors.email && <p className="text-primary font-black italic lowercase text-xs">!! {errors.email}</p>}
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// YEAR OF STUDY</label>
+                    <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// YEAR OF STUDY / ROLE</label>
                     <select 
                       title="Year of Study"
                       value={formData.yearOfStudy}
                       onChange={e => setFormData({...formData, yearOfStudy: e.target.value})}
                       className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none"
                     >
-                      <option value="">Select Year</option>
+                      <option value="">Select Option</option>
                       <option>1st Year</option>
                       <option>2nd Year</option>
                       <option>3rd Year</option>
                       <option>4th Year</option>
                       <option>Graduate</option>
+                      <option>Fresher</option>
+                      <option>Professional</option>
                     </select>
                     {errors.yearOfStudy && <p className="text-primary font-black italic lowercase text-xs">!! {errors.yearOfStudy}</p>}
                   </div>
                   <div className="space-y-3">
                     <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// BRANCH / STREAM</label>
-                    <input 
-                      type="text" 
+                    <select 
+                      title="Branch"
                       value={formData.branch}
                       onChange={e => setFormData({...formData, branch: e.target.value})}
-                      className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
-                      placeholder="e.g. Computer Science" 
-                    />
+                      className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-6 font-black text-lg md:text-3xl outline-none"
+                    >
+                      <option value="">Select Branch</option>
+                      {branchList.map(b => <option key={b} value={b}>{b}</option>)}
+                    </select>
                     {errors.branch && <p className="text-primary font-black italic lowercase text-xs">!! {errors.branch}</p>}
                   </div>
 
@@ -249,40 +265,78 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
                     </p>
 
                   </div>
-                  <div className="grid grid-cols-1 gap-10">
-                    <div className="space-y-3">
-                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// LINKEDIN URL</label>
-                      <input 
-                        type="text" 
-                        value={formData.linkedin}
-                        onChange={e => setFormData({...formData, linkedin: e.target.value})}
-                        className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-8 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
-                        placeholder="https://linkedin.com/in/yourhandle" 
-                      />
-                      {errors.linkedin && <p className="text-primary font-black italic lowercase text-xs">!! {errors.linkedin}</p>}
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// GITHUB URL (OPTIONAL)</label>
-                      <input 
-                        type="text" 
-                        value={formData.github}
-                        onChange={e => setFormData({...formData, github: e.target.value})}
-                        className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-8 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
-                        placeholder="https://github.com/yourhandle" 
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// PORTFOLIO (OPTIONAL)</label>
-                      <input 
-                        type="text" 
-                        value={formData.portfolio}
-                        onChange={e => setFormData({...formData, portfolio: e.target.value})}
-                        className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-8 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
-                        placeholder="https://yourportfolio.com" 
+                  <div className="space-y-8 p-6 border-2 border-black bg-white shadow-[6px_6px_0px_#000]">
+                      <div className="space-y-3">
+                        <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// LINKEDIN URL</label>
+                        <input 
+                          type="text" 
+                          value={formData.linkedin}
+                          onChange={e => setFormData({...formData, linkedin: e.target.value})}
+                          className="w-full bg-white border-2 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                          placeholder="https://linkedin.com/in/yourhandle" 
+                        />
+                        {errors.linkedin && <p className="text-primary font-black italic lowercase text-xs">!! {errors.linkedin}</p>}
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// GITHUB URL</label>
+                          <input 
+                            type="text" 
+                            value={formData.github}
+                            onChange={e => setFormData({...formData, github: e.target.value})}
+                            className="w-full bg-white border-2 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                            placeholder="https://github.com/yourhandle" 
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// GITHUB USERNAME</label>
+                          <input 
+                            type="text" 
+                            value={formData.githubUsername}
+                            onChange={e => setFormData({...formData, githubUsername: e.target.value})}
+                            className="w-full bg-white border-2 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                            placeholder="yourusername" 
+                          />
+                          {errors.githubUsername && <p className="text-primary font-black italic lowercase text-xs">!! {errors.githubUsername}</p>}
+                        </div>
+                      </div>
 
-                      />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// LEETCODE URL</label>
+                          <input 
+                            type="text" 
+                            value={formData.leetcode}
+                            onChange={e => setFormData({...formData, leetcode: e.target.value})}
+                            className="w-full bg-white border-2 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                            placeholder="https://leetcode.com/yourhandle" 
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// LEETCODE USERNAME</label>
+                          <input 
+                            type="text" 
+                            value={formData.leetcodeUsername}
+                            onChange={e => setFormData({...formData, leetcodeUsername: e.target.value})}
+                            className="w-full bg-white border-2 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                            placeholder="yourusername" 
+                          />
+                          {errors.leetcodeUsername && <p className="text-primary font-black italic lowercase text-xs">!! {errors.leetcodeUsername}</p>}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// PORTFOLIO (OPTIONAL)</label>
+                        <input 
+                          type="text" 
+                          value={formData.portfolio}
+                          onChange={e => setFormData({...formData, portfolio: e.target.value})}
+                          className="w-full bg-white border-2 border-black p-4 md:p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10" 
+                          placeholder="https://yourportfolio.com" 
+                        />
+                      </div>
                     </div>
-                  </div>
                 </div>
               )}
 
@@ -321,41 +375,139 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
                       </div>
                    </div>
 
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                      <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// EXPERIENCE LEVEL</label>
-                         <div className="flex flex-col gap-4">
-                            {['Beginner', 'Intermediate', 'Advanced', 'Wizard'].map(lvl => (
-                              <button
-                                key={lvl}
-                                onClick={() => setFormData({...formData, experience: lvl})}
-                                className={`p-4 border-2 md:border-4 border-black text-left font-black text-lg md:text-2xl italic flex items-center gap-4 transition-all ${formData.experience === lvl ? 'bg-[#185FA5]/10 border-[#185FA5] shadow-[6px_6px_0px_#185FA5]' : 'bg-white shadow-[4px_4px_0px_#000]'}`}
-                              >
-                                <div className={`w-6 h-6 border-2 border-black ${formData.experience === lvl ? 'bg-[#185FA5]' : 'bg-white'}`} />
-                                {lvl}
-                              </button>
-                            ))}
-                         </div>
-                         {errors.experience && <p className="text-primary font-black italic lowercase text-xs">!! {errors.experience}</p>}
-                      </div>
+                   <div className="grid grid-cols-1 gap-12">
                       <div className="space-y-3">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// CURRENTLY WORKING ON</label>
-                         <textarea 
-                           className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-8 h-40 md:h-full font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10 transition-all resize-none" 
-                           placeholder="What are you currently working on?"
-
-                           value={formData.workingOn}
-                           onChange={e => setFormData({...formData, workingOn: e.target.value})}
-                         />
-                         {errors.workingOn && <p className="text-primary font-black italic lowercase text-xs">!! {errors.workingOn}</p>}
-                      </div>
+                       <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// CURRENTLY WORKING ON</label>
+                       <textarea 
+                         className="w-full bg-white border-2 md:border-4 border-black p-4 md:p-8 h-40 md:h-64 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10 transition-all resize-none" 
+                         placeholder="What are you currently working on? (e.g. Learning Rust, Building a SaaS, Preparing for Hackathons)"
+                         value={formData.workingOn}
+                         onChange={e => setFormData({...formData, workingOn: e.target.value})}
+                       />
+                       {errors.workingOn && <p className="text-primary font-black italic lowercase text-xs">!! {errors.workingOn}</p>}
+                    </div>
                    </div>
                 </div>
               )}
 
-              {step === 4 && (
+               {step === 4 && (
                 <div className="space-y-10">
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                   {/* Conditional Fields based on Year of Study */}
+                   {(formData.yearOfStudy === '1st Year' || formData.yearOfStudy === '2nd Year') && (
+                     <div className="space-y-6">
+                        <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// PROJECT SUMMARY</label>
+                        <textarea 
+                          className="w-full bg-white border-2 md:border-4 border-black p-6 md:p-10 h-40 md:h-64 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
+                          placeholder="Summarize your key projects or what you've built so far..."
+                          value={formData.projectSummary}
+                          onChange={e => setFormData({...formData, projectSummary: e.target.value})}
+                        />
+                        {errors.projectSummary && <p className="text-primary font-black italic lowercase text-xs">!! {errors.projectSummary}</p>}
+                     </div>
+                   )}
+
+                   {(formData.yearOfStudy === '3rd Year' || formData.yearOfStudy === '4th Year') && (
+                     <div className="space-y-12">
+                        <div className="space-y-6">
+                           <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// INTERNSHIP COUNT</label>
+                           <input 
+                             type="number"
+                             value={formData.internshipCount}
+                             onChange={e => setFormData({...formData, internshipCount: e.target.value})}
+                             className="w-full bg-white border-2 md:border-4 border-black p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10"
+                             placeholder="How many internships have you done?"
+                           />
+                           {errors.internshipCount && <p className="text-primary font-black italic lowercase text-xs">!! {errors.internshipCount}</p>}
+                        </div>
+
+                        <div className="space-y-8">
+                           <div className="flex justify-between items-center">
+                              <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// CONTEST PARTICIPATION</label>
+                              <button 
+                                onClick={() => setFormData({
+                                  ...formData, 
+                                  contests: [...formData.contests, { type: '' }]
+                                })}
+                                className="w-12 h-12 bg-black text-white flex items-center justify-center font-black text-3xl hover:bg-[#185FA5] transition-colors"
+                              >
+                                +
+                              </button>
+                           </div>
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              {formData.contests.map((contest, index) => (
+                                <div key={index} className="flex gap-4">
+                                   <select
+                                     title="Contest Type"
+                                     value={contest.type}
+                                     onChange={e => {
+                                       const newContests = [...formData.contests];
+                                       newContests[index].type = e.target.value;
+                                       setFormData({...formData, contests: newContests});
+                                     }}
+                                     className="w-full bg-white border-2 md:border-4 border-black p-6 font-black text-lg md:text-xl outline-none"
+                                   >
+                                     <option value="">Select Contest Type</option>
+                                     {contestTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                                   </select>
+                                   {formData.contests.length > 1 && (
+                                     <button 
+                                       onClick={() => {
+                                         const newContests = formData.contests.filter((_, i) => i !== index);
+                                         setFormData({...formData, contests: newContests});
+                                       }}
+                                       className="px-6 bg-primary text-white font-black"
+                                     >
+                                       X
+                                     </button>
+                                   )}
+                                </div>
+                              ))}
+                           </div>
+                        </div>
+                     </div>
+                   )}
+
+                   {(formData.yearOfStudy === 'Fresher' || formData.yearOfStudy === 'Professional' || formData.yearOfStudy === 'Graduate') && (
+                     <div className="space-y-12">
+                        <div className="space-y-6">
+                           <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// YEARS OF EXPERIENCE</label>
+                           <input 
+                             type="number"
+                             value={formData.yearsOfExperience}
+                             onChange={e => setFormData({...formData, yearsOfExperience: e.target.value})}
+                             className="w-full bg-white border-2 md:border-4 border-black p-6 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10"
+                             placeholder="e.g. 2"
+                           />
+                           {errors.yearsOfExperience && <p className="text-primary font-black italic lowercase text-xs">!! {errors.yearsOfExperience}</p>}
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                           <div className="space-y-6">
+                              <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// INITIAL JOB ROLE</label>
+                              <input 
+                                type="text"
+                                value={formData.initialJobRole}
+                                onChange={e => setFormData({...formData, initialJobRole: e.target.value})}
+                                className="w-full bg-white border-2 md:border-4 border-black p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10"
+                                placeholder="e.g. Junior Web Developer"
+                              />
+                              {errors.initialJobRole && <p className="text-primary font-black italic lowercase text-xs">!! {errors.initialJobRole}</p>}
+                           </div>
+                           <div className="space-y-6">
+                              <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// CURRENT JOB ROLE</label>
+                              <input 
+                                type="text"
+                                value={formData.currentJobRole}
+                                onChange={e => setFormData({...formData, currentJobRole: e.target.value})}
+                                className="w-full bg-white border-2 md:border-4 border-black p-6 font-black text-lg md:text-2xl outline-none focus:bg-[#185FA5]/10"
+                                placeholder="e.g. Senior Frontend Engineer"
+                              />
+                              {errors.currentJobRole && <p className="text-primary font-black italic lowercase text-xs">!! {errors.currentJobRole}</p>}
+                           </div>
+                        </div>
+                     </div>
+                   )}
+
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t-4 border-black">
                       <div className="space-y-3">
                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// PROFILE SUMMARY</label>
                          <textarea 
@@ -364,7 +516,6 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
                            value={formData.profileSummary}
                            onChange={e => setFormData({...formData, profileSummary: e.target.value})}
                          />
-                         {errors.profileSummary && <p className="text-primary font-black italic lowercase text-xs">!! {errors.profileSummary}</p>}
                       </div>
                       <div className="space-y-3">
                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// GOAL SUMMARY</label>
@@ -374,29 +525,16 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
                            value={formData.goalSummary}
                            onChange={e => setFormData({...formData, goalSummary: e.target.value})}
                          />
-                         {errors.goalSummary && <p className="text-primary font-black italic lowercase text-xs">!! {errors.goalSummary}</p>}
                       </div>
                       <div className="space-y-3">
                          <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// INTEREST SUMMARY</label>
                          <textarea 
                            className="w-full bg-white border-2 md:border-4 border-black p-4 h-48 font-black text-lg md:text-xl outline-none focus:bg-[#185FA5]/10" 
                            placeholder="What are your main interests?"
-
                            value={formData.interestSummary}
                            onChange={e => setFormData({...formData, interestSummary: e.target.value})}
                          />
-                         {errors.interestSummary && <p className="text-primary font-black italic lowercase text-xs">!! {errors.interestSummary}</p>}
                       </div>
-                   </div>
-                   <div className="space-y-3">
-                      <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// PROJECTS / EXPERIENCE (OPTIONAL)</label>
-                      <textarea 
-                        className="w-full bg-white border-2 md:border-4 border-black p-6 md:p-10 h-40 md:h-64 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
-                        placeholder="List your key projects and experience..."
-
-                        value={formData.projects}
-                        onChange={e => setFormData({...formData, projects: e.target.value})}
-                      />
                    </div>
                 </div>
               )}
@@ -435,122 +573,41 @@ export const ProfileCreationView: React.FC<ProfileCreationViewProps> = ({ onComp
                          </div>
                       </div>
                    </div>
-
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-16 border-t-4 border-black pt-12">
-                      <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// INTERACTION STYLE</label>
-                         <select 
-                           title="Interaction Style"
-                           className="w-full bg-white border-4 border-black p-6 font-black text-lg md:text-2xl"
-                           value={formData.interactionStyle}
-                           onChange={e => setFormData({...formData, interactionStyle: e.target.value})}
-                         >
-
-                            <option value="">Select Style</option>
-                            <option>Introvert (Digital Only)</option>
-                            <option>Ambivert</option>
-                            <option>Extrovert</option>
-
-                         </select>
-                      </div>
-                      <div className="space-y-6">
-                         <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// COMMUNICATION PREFERENCE</label>
-                         <select 
-                           title="Communication Preference"
-                           className="w-full bg-white border-4 border-black p-6 font-black text-lg md:text-2xl"
-                           value={formData.communicationPreference}
-                           onChange={e => setFormData({...formData, communicationPreference: e.target.value})}
-                         >
-
-                            <option value="">Select Pref</option>
-                            <option>Async (Text/Mail)</option>
-                            <option>Real-time (Video/Call)</option>
-                            <option>Physical (IRL Only)</option>
-                         </select>
-                      </div>
-                   </div>
                 </div>
               )}
 
               {step === 6 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 px-4">
-                   <div className="space-y-12">
-                      <div className="space-y-6">
-                         <div className="flex justify-between items-center">
-                           <label className="text-[10px] md:text-sm font-black uppercase tracking-[0.4em] text-primary">// MBTI TRAIT</label>
-                           <a href="https://www.16personalities.com/personality-types" target="_blank" rel="noopener noreferrer" className="text-xs text-[#185FA5] underline font-bold italic">FIND YOUR TYPE</a>
-                         </div>
+                    <div className="space-y-12">
+                       <div className="space-y-6">
+                          <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// OPEN-TO OPPORTUNITIES</label>
+                          <div className="grid grid-cols-2 gap-4">
+                             {openToList.map(item => (
+                               <button
+                                 key={item}
+                                 onClick={() => toggleArrayItem('openTo', item)}
+                                 className={`p-4 border-4 border-black font-black text-xs uppercase tracking-tighter transition-all ${formData.openTo.includes(item) ? 'bg-[#185FA5] text-white shadow-[6px_6px_0px_#000]' : 'bg-white hover:bg-surface-low shadow-[3px_3px_0px_#000]'}`}
+                               >
+                                 {item}
+                               </button>
+                             ))}
+                          </div>
+                       </div>
+                    </div>
 
-                         <div className="space-y-4">
-                            <select 
-                               title="MBTI Trait selection"
-                               className="w-full bg-white border-4 border-black p-6 font-black text-lg md:text-2xl"
-                               value={formData.mbtiTrait}
-                               onChange={e => setFormData({...formData, mbtiTrait: e.target.value})}
-                            >
-                               <option value="">Select MBTI</option>
-                               <option value="INTJ">INTJ (Architect)</option>
-                               <option value="INTP">INTP (Logician)</option>
-                               <option value="ENTJ">ENTJ (Commander)</option>
-                               <option value="ENTP">ENTP (Debater)</option>
-                               <option value="INFJ">INFJ (Advocate)</option>
-                               <option value="INFP">INFP (Mediator)</option>
-                               <option value="ENFJ">ENFJ (Protagonist)</option>
-                               <option value="ENFP">ENFP (Campaigner)</option>
-                               <option value="ISTJ">ISTJ (Logistician)</option>
-                               <option value="ISFJ">ISFJ (Defender)</option>
-                               <option value="ESTJ">ESTJ (Executive)</option>
-                               <option value="ESFJ">ESFJ (Consul)</option>
-                               <option value="ISTP">ISTP (Virtuoso)</option>
-                               <option value="ISFP">ISFP (Adventurer)</option>
-                               <option value="ESTP">ESTP (Entrepreneur)</option>
-                               <option value="ESFP">ESFP (Entertainer)</option>
-                            </select>
-                         </div>
-                      </div>
-                      <div className="space-y-6">
-                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-secondary">// PERSONALITY TYPE</label>
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {['Analyst', 'Diplomat', 'Sentinel', 'Explorer'].map(type => (
-                              <button
-                                key={type}
-                                onClick={() => setFormData({...formData, personalityType: type})}
-                                className={`w-full p-4 border-4 border-black text-left font-black text-lg md:text-xl transition-all ${formData.personalityType === type ? 'bg-secondary text-black shadow-[8px_8px_0px_#000]' : 'bg-white shadow-[4px_4px_0px_#000]'}`}
-                              >
-                                {type}
-                              </button>
-                            ))}
-                         </div>
-                      </div>
-                   </div>
+                    <div className="space-y-12">
+                       <div className="space-y-6">
+                          <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-primary">// DREAM ROLE</label>
+                          <input 
+                            type="text" 
+                            value={formData.dreamRole}
+                            onChange={e => setFormData({...formData, dreamRole: e.target.value})}
+                            className="w-full bg-white border-4 border-black p-8 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
+                            placeholder="e.g. Software Engineer at OpenAI" 
 
-                   <div className="space-y-12">
-                      <div className="space-y-6">
-                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-tertiary">// OPEN-TO OPPORTUNITIES</label>
-                         <div className="grid grid-cols-2 gap-4">
-                            {openToList.map(item => (
-                              <button
-                                key={item}
-                                onClick={() => toggleArrayItem('openTo', item)}
-                                className={`p-4 border-4 border-black font-black text-xs uppercase tracking-tighter transition-all ${formData.openTo.includes(item) ? 'bg-[#185FA5] text-white shadow-[6px_6px_0px_#000]' : 'bg-white hover:bg-surface-low shadow-[3px_3px_0px_#000]'}`}
-                              >
-                                {item}
-                              </button>
-                            ))}
-                         </div>
-                      </div>
-                      <div className="space-y-6">
-                         <label className="text-[9px] sm:text-xs md:text-sm font-black uppercase tracking-[0.4em] text-primary">// DREAM ROLE</label>
-                         <input 
-                           type="text" 
-                           value={formData.dreamRole}
-                           onChange={e => setFormData({...formData, dreamRole: e.target.value})}
-                           className="w-full bg-white border-4 border-black p-8 font-black text-lg md:text-3xl outline-none focus:bg-[#185FA5]/10" 
-                           placeholder="e.g. Software Engineer at OpenAI" 
-
-                         />
-                      </div>
-                   </div>
+                          />
+                       </div>
+                    </div>
                 </div>
               )}
 
